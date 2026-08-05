@@ -1,6 +1,7 @@
-import DonationTiers from "@/components/DonationTiers";
 import { Progress } from "@/components/ui/progress";
+import { trackEvent } from "@/lib/analytics";
 import { CheckCircle2 } from "lucide-react";
+import { useState } from "react";
 import { Link } from "wouter";
 
 /**
@@ -30,6 +31,160 @@ const RECENT_DONATIONS = [
   { initials: "J. L.", amount: 25, when: "hace 34 min" },
   { initials: "Anónimo", amount: 5, when: "hace 1 h" },
 ];
+
+const AMOUNTS = [5, 10, 20, 50, 100];
+
+// 10€/20€ share the mug photo, 50€/100€ share the full-pack photo, per the
+// simplified messaging asked for — NOT the real per-tier reward list.
+// 50€/100€ have no physical reward on the backend today (shared/donaciones.ts
+// marks them non-physical, so checkout never collects a shipping address);
+// this preview promises one anyway. Needs a real backend tier change before
+// this page goes live, or the promise on screen won't be honoured.
+const REWARD_PREVIEW: Record<
+  number,
+  { image: string; alt: string; caption: string }
+> = {
+  10: {
+    image: "/images/tier-5-mug.jpg",
+    alt: "Taza exclusiva Voz de Gato",
+    caption: "Una taza exclusiva Voz de Gato, como agradecimiento.",
+  },
+  20: {
+    image: "/images/tier-5-mug.jpg",
+    alt: "Taza exclusiva Voz de Gato",
+    caption: "Una taza exclusiva Voz de Gato, como agradecimiento.",
+  },
+  50: {
+    image: "/images/tier-20-bundle.jpg",
+    alt: "Pack completo Voz de Gato: camiseta, bolsa de tela y taza",
+    caption: "El pack completo Voz de Gato: camiseta, bolsa y taza.",
+  },
+  100: {
+    image: "/images/tier-20-bundle.jpg",
+    alt: "Pack completo Voz de Gato: camiseta, bolsa de tela y taza",
+    caption: "El pack completo Voz de Gato: camiseta, bolsa y taza.",
+  },
+};
+
+function FlatDonationButtons() {
+  const [selected, setSelected] = useState<number | null>(null);
+  const [pending, setPending] = useState<number | null>(null);
+  const [error, setError] = useState("");
+
+  const handleDonate = async (amount: number) => {
+    setPending(amount);
+    setError("");
+    trackEvent("begin_checkout", {
+      currency: "EUR",
+      value: amount,
+      items: [
+        { item_id: `tier_${amount}`, item_name: `${amount}€`, price: amount },
+      ],
+    });
+    try {
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ amount }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.url) {
+        setError(
+          data.error || "No hemos podido abrir el pago. Inténtalo de nuevo."
+        );
+        trackEvent("checkout_error", {
+          amount,
+          reason: data.error || "api_error",
+        });
+        setPending(null);
+        return;
+      }
+      window.location.href = data.url;
+    } catch {
+      setError(
+        "No hemos podido abrir el pago. Revisa tu conexión e inténtalo de nuevo."
+      );
+      trackEvent("checkout_error", { amount, reason: "network_error" });
+      setPending(null);
+    }
+  };
+
+  const handleSelect = (amount: number) => {
+    // 5€ has no reward to preview — straight to checkout.
+    if (!REWARD_PREVIEW[amount]) {
+      handleDonate(amount);
+      return;
+    }
+    trackEvent("select_item", {
+      items: [
+        { item_id: `tier_${amount}`, item_name: `${amount}€`, price: amount },
+      ],
+    });
+    setSelected(amount);
+  };
+
+  const preview = selected ? REWARD_PREVIEW[selected] : null;
+
+  return (
+    <div>
+      <div className="grid grid-cols-3 sm:grid-cols-5 gap-3 mb-5">
+        {AMOUNTS.map(amount => (
+          <button
+            key={amount}
+            type="button"
+            disabled={pending !== null}
+            onClick={() => handleSelect(amount)}
+            className={`rounded-xl border-2 py-4 text-center transition-colors disabled:opacity-60 ${
+              selected === amount
+                ? "border-primary bg-primary/5"
+                : "border-primary/30 hover:border-primary hover:bg-primary/5"
+            }`}
+          >
+            <span className="block text-xl sm:text-2xl font-poppins font-bold text-primary">
+              {pending === amount ? "…" : `${amount}€`}
+            </span>
+          </button>
+        ))}
+      </div>
+
+      {preview && (
+        <div className="rounded-2xl border border-border overflow-hidden mb-5">
+          <img
+            src={preview.image}
+            alt={preview.alt}
+            className="w-full h-48 object-cover"
+          />
+          <div className="p-4 text-center">
+            <p className="font-semibold mb-3">Vas a recibir esto:</p>
+            <p className="text-foreground/70 mb-4">{preview.caption}</p>
+            <button
+              type="button"
+              disabled={pending !== null}
+              onClick={() => handleDonate(selected!)}
+              className="w-full rounded-xl bg-primary text-primary-foreground font-poppins font-bold py-3 disabled:opacity-60"
+            >
+              {pending === selected ? "…" : `Continuar con ${selected}€`}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {error && (
+        <p
+          className="text-center text-destructive font-medium mb-5"
+          role="alert"
+        >
+          {error}
+        </p>
+      )}
+
+      <p className="text-center text-sm text-foreground/60">
+        Pago seguro con tarjeta o Bizum a través de Stripe. Si tu aportación
+        lleva recompensa, te pedimos la dirección de envío durante el pago.
+      </p>
+    </div>
+  );
+}
 
 export default function Dona2() {
   return (
@@ -132,10 +287,10 @@ export default function Dona2() {
             </h2>
             <p className="text-center text-foreground/70 mb-8">
               Elige una cantidad. Algunas incluyen un pequeño detalle de
-              agradecimiento — lo verás al abrir cada opción.
+              agradecimiento — te lo enseñamos antes de pagar.
             </p>
 
-            <DonationTiers />
+            <FlatDonationButtons />
           </div>
         </section>
 
