@@ -1,8 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { MONTHLY_AMOUNTS } from "@shared/donaciones";
-import { Check, Heart } from "lucide-react";
+import { Check, Facebook, Heart } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "wouter";
+
+const PETITION_URL = "https://vozdegato.com/peticion";
+const SHARE_TEXT = "España arde y a las colonias de gatos no las rescata nadie. Firma con nosotros:";
 
 type Status =
   | { state: "loading" }
@@ -60,6 +63,13 @@ export default function DonacionCompletada() {
   };
 
   const alreadyMonthly = status.state === "ok" && status.monthly;
+
+  const handleShare = () => {
+    const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+      PETITION_URL
+    )}&quote=${encodeURIComponent(SHARE_TEXT)}`;
+    window.open(url, "compartir-facebook", "width=600,height=520");
+  };
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -165,6 +175,28 @@ export default function DonacionCompletada() {
               <Check className="w-4 h-4 flex-shrink-0 mt-0.5 text-primary" strokeWidth={3} />
               Sin permanencia. Cancelas cuando quieras desde el correo del recibo.
             </p>
+          </div>
+        )}
+
+        {/* Last step: turn a donor into a megaphone */}
+        {status.state === "ok" && (
+          <div className="text-center mt-10 bg-white rounded-2xl border border-border p-6 sm:p-8">
+            <img src="/images/logo-mark.png" alt="" className="h-12 w-12 object-contain mx-auto mb-4" />
+            <h2 className="text-xl sm:text-2xl font-poppins font-bold mb-2 text-balance">
+              Sé la voz de los gatos en redes
+            </h2>
+            <p className="text-foreground/70 leading-relaxed max-w-sm mx-auto mb-6">
+              Ayúdanos a llegar a más gente. Cuantas más firmas, más fuerza para exigir el protocolo
+              de rescate.
+            </p>
+            <Button
+              onClick={handleShare}
+              size="lg"
+              className="bg-[#1877F2] hover:bg-[#1877F2]/90 text-white font-semibold h-auto py-4 px-8"
+            >
+              <Facebook className="w-5 h-5" fill="currentColor" />
+              Compartir la petición
+            </Button>
           </div>
         )}
 
