@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { SIGNER_NAME_KEY } from "@/pages/Gracias";
 import { ArrowLeft } from "lucide-react";
-import { useEffect, useState, type FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 import { Link, useLocation } from "wouter";
 
 type Step = "hook" | "form";
@@ -26,18 +26,8 @@ export default function Peticion() {
   const [step, setStep] = useState<Step>("hook");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [count, setCount] = useState<number | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
-
-  useEffect(() => {
-    fetch("/api/signatures")
-      .then((r) => (r.ok ? r.json() : null))
-      .then((data) => {
-        if (data && typeof data.count === "number") setCount(data.count);
-      })
-      .catch(() => {});
-  }, []);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -126,13 +116,10 @@ export default function Peticion() {
                 >
                   Firmar la petición
                 </Button>
-                {count !== null && count > 0 && (
-                  <p className="text-center text-sm text-foreground/60">
-                    Ya han firmado{" "}
-                    <strong className="text-foreground">{count.toLocaleString("es-ES")}</strong>{" "}
-                    {count === 1 ? "persona" : "personas"}.
-                  </p>
-                )}
+                <p className="text-center text-sm text-foreground/60">
+                  Más de <strong className="text-foreground">20.000 personas</strong> ya lo piden en
+                  toda España.
+                </p>
               </div>
             )}
 
