@@ -59,6 +59,59 @@ export default function Dona() {
           </div>
         </section>
 
+        {/* Guadalajara mission photo series */}
+        <section className="py-12 md:py-16 bg-white">
+          <div className="container max-w-xl mx-auto">
+            <p className="text-center text-[11px] font-semibold tracking-wide uppercase text-primary/80 mb-6">
+              Misión Guadalajara · Sierra de Guadalajara, España
+            </p>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div className="col-span-2 rounded-xl overflow-hidden shadow-md">
+                <img
+                  src="/images/mision-guadalajara-equipo.jpg"
+                  alt="El equipo de Voz de Gato posa con los gatos rescatados durante la misión de emergencia en la sierra de Guadalajara, con el humo del incendio al fondo"
+                  className="w-full h-56 sm:h-72 object-cover"
+                />
+              </div>
+              <div className="rounded-xl overflow-hidden shadow-md">
+                <img
+                  src="/images/mision-guadalajara-alimentando.jpg"
+                  alt="Voluntaria de Voz de Gato dando de comer a un gato junto a los transportines, con otro gato observando entre la ceniza"
+                  className="w-full h-36 sm:h-44 object-cover"
+                />
+              </div>
+              <div className="rounded-xl overflow-hidden shadow-md">
+                <img
+                  src="/images/mision-guadalajara-manta.jpg"
+                  alt="Voluntaria sujetando a un gato rescatado envuelto en una manta, con dos gatos más cerca en la ladera quemada"
+                  className="w-full h-36 sm:h-44 object-cover"
+                />
+              </div>
+              <div className="rounded-xl overflow-hidden shadow-md">
+                <img
+                  src="/images/mision-guadalajara-transporte.jpg"
+                  alt="Voluntario caminando con un transportín y una manta entre los gatos de la colonia, en la zona afectada por el incendio"
+                  className="w-full h-36 sm:h-44 object-cover"
+                />
+              </div>
+              <div className="rounded-xl overflow-hidden shadow-md">
+                <img
+                  src="/images/mision-guadalajara-colonia.jpg"
+                  alt="Voluntaria dando de comer y de beber a varios gatos de la colonia en la ladera quemada de la sierra de Guadalajara"
+                  className="w-full h-36 sm:h-44 object-cover"
+                />
+              </div>
+            </div>
+
+            <p className="text-center text-xs text-foreground/60 leading-relaxed max-w-md mx-auto mt-5">
+              En pleno incendio en la sierra de Guadalajara, nuestro equipo se desplazó para
+              rescatar, alimentar y poner a salvo a los gatos de una colonia atrapada entre el
+              humo. Así fue la misión, día a día.
+            </p>
+          </div>
+        </section>
+
         {/* Second photo + trust */}
         <section className="py-12 md:py-16 bg-white">
           <div className="container max-w-xl mx-auto flex flex-col gap-8">
