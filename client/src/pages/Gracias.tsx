@@ -1,4 +1,5 @@
 import DonationTier from "@/components/DonationTier";
+import { Button } from "@/components/ui/button";
 import { Heart } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "wouter";
@@ -51,18 +52,24 @@ const TIERS = [
   },
 ];
 
+const BIG_TIERS = [
+  {
+    amount: 50,
+    title: "Padrino de una colonia",
+    description: "Cubres el mantenimiento de una colonia pequeña durante un mes.",
+  },
+  {
+    amount: 100,
+    title: "Guardián de las colonias",
+    description: "Ayudas con esterilizaciones y urgencias veterinarias.",
+  },
+];
+
 export default function Gracias() {
   const [name, setName] = useState("");
-  const [count, setCount] = useState<number | null>(null);
 
   useEffect(() => {
     setName(sessionStorage.getItem(SIGNER_NAME_KEY) || "");
-    fetch("/api/signatures")
-      .then((r) => (r.ok ? r.json() : null))
-      .then((data) => {
-        if (data && typeof data.count === "number") setCount(data.count);
-      })
-      .catch(() => {});
   }, []);
 
   const firstName = name.trim().split(" ")[0];
@@ -103,13 +110,11 @@ export default function Gracias() {
             Tu firma ya está registrada. Cuando reunamos las suficientes, la llevamos donde tiene que
             llegar.
           </p>
-          {count !== null && (
-            <p className="text-lg text-foreground/70">
-              Ya sois{" "}
-              <strong className="text-primary font-poppins">{count.toLocaleString("es-ES")}</strong>{" "}
-              {count === 1 ? "persona firmante" : "personas firmantes"}.
-            </p>
-          )}
+          <p className="text-lg text-foreground/70">
+            En toda España ya hay{" "}
+            <strong className="text-primary font-poppins">más de 20.000 firmas</strong> pidiendo un
+            protocolo de rescate animal en catástrofes. La tuya suma.
+          </p>
         </div>
 
         {/* Donation bridge */}
@@ -142,9 +147,35 @@ export default function Gracias() {
           ))}
         </div>
 
+        {/* Larger amounts, no reward photo */}
+        <div className="max-w-3xl mx-auto mb-10">
+          <p className="text-center text-foreground/70 mb-5">¿Quieres aportar más?</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {BIG_TIERS.map((tier) => (
+              <div
+                key={tier.amount}
+                className="flex items-center gap-5 bg-white border border-border rounded-xl p-5"
+              >
+                <div className="min-w-0 flex-1">
+                  <p className="font-poppins font-bold text-foreground">{tier.title}</p>
+                  <p className="text-sm text-foreground/70 leading-snug">{tier.description}</p>
+                </div>
+                <Button
+                  onClick={() => handleDonate(tier.amount, tier.title)}
+                  variant="outline"
+                  className="flex-shrink-0 border-2 border-primary text-primary hover:bg-primary/10 font-semibold h-auto py-2.5 px-5"
+                >
+                  {tier.amount}€
+                </Button>
+              </div>
+            ))}
+          </div>
+        </div>
+
         <p className="text-center text-sm text-foreground/60 max-w-xl mx-auto mb-16">
           Al elegir una cantidad se abrirá tu correo con un mensaje ya escrito. Te contestamos con
-          las instrucciones de pago y te pedimos la dirección de envío de tu recompensa.
+          las instrucciones de pago y, si tu aportación lleva recompensa, te pedimos la dirección de
+          envío.
         </p>
 
         {/* Trust */}
