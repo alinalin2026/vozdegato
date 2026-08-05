@@ -93,11 +93,14 @@ export default function Peticion() {
               <div className="flex flex-col gap-5 p-7">
                 <div className="relative -mx-7 -mt-7">
                   <img
-                    src="/images/cuidadora-alimentando.jpg"
-                    alt="Voluntaria de Voz de Gato cuidando a una colonia de gatos"
-                    className="w-full h-44 object-cover"
+                    src="/images/incendio-colonia.jpg"
+                    alt="Ilustración: una colonia de gatos observa un incendio forestal que avanza hacia su pueblo"
+                    className="w-full h-60 object-cover object-[50%_62%]"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                  <span className="absolute right-3 top-3 text-white/60 text-[10px] font-medium tracking-wide uppercase">
+                    Ilustración
+                  </span>
                   <span className="absolute left-4 bottom-3 bg-black/50 backdrop-blur-sm text-white text-xs font-semibold px-3 py-1.5 rounded-full">
                     219.665 hectáreas quemadas en 2026
                   </span>
