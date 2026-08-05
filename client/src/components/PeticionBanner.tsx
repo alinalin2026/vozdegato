@@ -1,3 +1,4 @@
+import { trackEvent } from "@/lib/analytics";
 import { X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "wouter";
@@ -12,6 +13,7 @@ export default function PeticionBanner() {
   }, []);
 
   const handleDismiss = () => {
+    trackEvent("banner_dismiss", { location: "sticky_banner" });
     sessionStorage.setItem(DISMISS_KEY, "1");
     setDismissed(true);
   };
@@ -27,6 +29,7 @@ export default function PeticionBanner() {
         </p>
         <Link
           href="/peticion"
+          onClick={() => trackEvent("cta_click", { location: "sticky_banner", label: "Firmar" })}
           className="flex-shrink-0 bg-primary hover:bg-primary/90 transition-colors text-white font-semibold text-sm px-4 py-2 rounded-full"
         >
           Firmar

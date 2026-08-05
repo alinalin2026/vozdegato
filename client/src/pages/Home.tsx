@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import PeticionBanner from "@/components/PeticionBanner";
+import { trackEvent } from "@/lib/analytics";
 import { Mail, MapPin, Phone, Shield, Utensils, Heart } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -42,6 +43,7 @@ export default function Home() {
       return;
     }
     toast.success("¡Gracias! Ya tenemos tu mensaje y te contestamos en cuanto podamos.");
+    trackEvent("contact_form_submit");
     setFormData({ name: "", email: "", message: "" });
   };
 
@@ -76,6 +78,7 @@ export default function Home() {
             </a>
             <Link
               href="/peticion"
+              onClick={() => trackEvent("cta_click", { location: "header_nav", label: "Firma la petición" })}
               className="bg-primary/10 text-primary hover:bg-primary/20 transition-colors font-semibold px-3.5 py-1.5 rounded-full whitespace-nowrap"
             >
               Firma la petición
@@ -99,7 +102,10 @@ export default function Home() {
               <Button
                 size="lg"
                 className="bg-primary hover:bg-primary/90 text-white font-semibold"
-                onClick={() => document.getElementById("contacto")?.scrollIntoView({ behavior: "smooth" })}
+                onClick={() => {
+                  trackEvent("cta_click", { location: "hero_primary", label: "Únete a Nuestra Misión" });
+                  document.getElementById("contacto")?.scrollIntoView({ behavior: "smooth" });
+                }}
               >
                 Únete a Nuestra Misión
               </Button>
@@ -107,7 +113,10 @@ export default function Home() {
                 size="lg"
                 variant="outline"
                 className="border-primary text-primary hover:bg-primary/10"
-                onClick={() => document.getElementById("nosotros")?.scrollIntoView({ behavior: "smooth" })}
+                onClick={() => {
+                  trackEvent("cta_click", { location: "hero_secondary", label: "Conócenos" });
+                  document.getElementById("nosotros")?.scrollIntoView({ behavior: "smooth" });
+                }}
               >
                 Conócenos
               </Button>
@@ -476,7 +485,11 @@ export default function Home() {
                   </a>
                 </li>
                 <li>
-                  <Link href="/peticion" className="text-white/70 hover:text-white transition-colors">
+                  <Link
+                    href="/peticion"
+                    onClick={() => trackEvent("cta_click", { location: "footer_nav", label: "Firma la petición" })}
+                    className="text-white/70 hover:text-white transition-colors"
+                  >
                     Firma la petición
                   </Link>
                 </li>

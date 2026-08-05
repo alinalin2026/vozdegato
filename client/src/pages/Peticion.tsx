@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { trackEvent } from "@/lib/analytics";
 import { SIGNER_NAME_KEY } from "@/pages/Gracias";
 import { ArrowLeft } from "lucide-react";
 import { useState, type FormEvent } from "react";
@@ -46,12 +47,15 @@ export default function Peticion() {
       const data = await res.json();
       if (!res.ok) {
         setError(data.error || "No hemos podido guardar tu firma. Inténtalo de nuevo en unos minutos.");
+        trackEvent("petition_error", { reason: data.error || "api_error" });
         return;
       }
+      trackEvent("generate_lead", { method: "peticion_incendios", signature_count: data.count ?? null });
       sessionStorage.setItem(SIGNER_NAME_KEY, name.trim());
       navigate("/gracias");
     } catch {
       setError("No hemos podido guardar tu firma. Revisa tu conexión e inténtalo de nuevo.");
+      trackEvent("petition_error", { reason: "network_error" });
     } finally {
       setSubmitting(false);
     }
@@ -115,7 +119,10 @@ export default function Peticion() {
                 <Button
                   size="lg"
                   className="bg-primary hover:bg-primary/90 text-white font-semibold text-lg h-auto py-4"
-                  onClick={() => setStep("form")}
+                  onClick={() => {
+                    trackEvent("select_content", { content_type: "petition", item_id: "peticion_incendios" });
+                    setStep("form");
+                  }}
                 >
                   Firmar la petición
                 </Button>
