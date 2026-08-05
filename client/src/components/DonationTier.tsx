@@ -9,6 +9,7 @@ interface DonationTierProps {
   image: string;
   imageAlt: string;
   open: boolean;
+  pending: boolean;
   onToggle: () => void;
   onDonate: () => void;
   highlighted?: boolean;
@@ -22,6 +23,7 @@ export default function DonationTier({
   image,
   imageAlt,
   open,
+  pending,
   onToggle,
   onDonate,
   highlighted = false,
@@ -84,11 +86,12 @@ export default function DonationTier({
           </ul>
           <Button
             onClick={onDonate}
+            disabled={pending}
             size="lg"
             className="w-full bg-primary hover:bg-primary/90 text-white font-semibold text-lg h-auto py-4"
           >
             <Heart className="w-5 h-5" />
-            Donar {amount}€
+            {pending ? "Abriendo el pago…" : `Donar ${amount}€`}
           </Button>
         </div>
       )}
