@@ -69,6 +69,8 @@ export default function Gracias() {
   // All collapsed to start, so the three amounts land together on the first
   // screen rather than one open panel pushing the others below the fold.
   const [openTier, setOpenTier] = useState<number | null>(null);
+  const [pending, setPending] = useState<number | null>(null);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     setName(sessionStorage.getItem(SIGNER_NAME_KEY) || "");
@@ -76,12 +78,26 @@ export default function Gracias() {
 
   const firstName = name.trim().split(" ")[0];
 
-  const handleDonate = (amount: number, label: string) => {
-    const subject = `Quiero donar ${amount}€ — ${label}`;
-    const body = `Hola,\n\nAcabo de firmar la petición y quiero colaborar con ${amount}€ (${label}). Decidme cómo hacer la donación y a qué dirección enviarme la recompensa.\n\nGracias.`;
-    window.location.href = `mailto:hola@vozdegato.com?subject=${encodeURIComponent(
-      subject
-    )}&body=${encodeURIComponent(body)}`;
+  const handleDonate = async (amount: number) => {
+    setPending(amount);
+    setError("");
+    try {
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ amount }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.url) {
+        setError(data.error || "No hemos podido abrir el pago. Inténtalo de nuevo.");
+        setPending(null);
+        return;
+      }
+      window.location.href = data.url;
+    } catch {
+      setError("No hemos podido abrir el pago. Revisa tu conexión e inténtalo de nuevo.");
+      setPending(null);
+    }
   };
 
   return (
@@ -127,8 +143,9 @@ export default function Gracias() {
               imageAlt={tier.imageAlt}
               highlighted={tier.highlighted}
               open={openTier === tier.amount}
+              pending={pending === tier.amount}
               onToggle={() => setOpenTier(openTier === tier.amount ? null : tier.amount)}
-              onDonate={() => handleDonate(tier.amount, tier.shortLabel)}
+              onDonate={() => handleDonate(tier.amount)}
             />
           ))}
         </div>
@@ -139,11 +156,12 @@ export default function Gracias() {
             <button
               key={tier.amount}
               type="button"
-              onClick={() => handleDonate(tier.amount, tier.title)}
-              className="rounded-xl border-2 border-primary/30 hover:border-primary hover:bg-primary/5 transition-colors p-4 text-left"
+              disabled={pending !== null}
+              onClick={() => handleDonate(tier.amount)}
+              className="rounded-xl border-2 border-primary/30 hover:border-primary hover:bg-primary/5 transition-colors p-4 text-left disabled:opacity-60"
             >
               <span className="block text-2xl font-poppins font-bold text-primary">
-                {tier.amount}€
+                {pending === tier.amount ? "…" : `${tier.amount}€`}
               </span>
               <span className="block text-sm font-semibold text-foreground leading-tight mt-0.5">
                 {tier.title}
@@ -152,10 +170,15 @@ export default function Gracias() {
           ))}
         </div>
 
+        {error && (
+          <p className="text-center text-destructive font-medium mb-5" role="alert">
+            {error}
+          </p>
+        )}
+
         <p className="text-center text-sm text-foreground/60 mb-14">
-          Al elegir una cantidad se abre tu correo con un mensaje ya escrito. Te contestamos con las
-          instrucciones de pago y, si tu aportación lleva recompensa, te pedimos la dirección de
-          envío.
+          Pago seguro con tarjeta o Bizum a través de Stripe. Si tu aportación lleva recompensa, te
+          pedimos la dirección de envío durante el pago.
         </p>
 
         {/* Context, now below the ask */}
