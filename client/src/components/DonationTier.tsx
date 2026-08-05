@@ -1,83 +1,97 @@
-import { Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ChevronDown, Heart } from "lucide-react";
 
 interface DonationTierProps {
   amount: number;
-  currency: string;
-  title: string;
+  shortLabel: string;
   description: string;
   rewards: string[];
   image: string;
   imageAlt: string;
+  open: boolean;
+  onToggle: () => void;
   onDonate: () => void;
   highlighted?: boolean;
 }
 
 export default function DonationTier({
   amount,
-  currency,
-  title,
+  shortLabel,
   description,
   rewards,
   image,
   imageAlt,
+  open,
+  onToggle,
   onDonate,
   highlighted = false,
 }: DonationTierProps) {
+  const panelId = `tier-${amount}-panel`;
+
   return (
     <div
-      className={`flex flex-col rounded-2xl overflow-hidden bg-white transition-shadow duration-300 ${
-        highlighted
-          ? "ring-2 ring-primary shadow-lg md:scale-105"
-          : "border border-border shadow-md hover:shadow-xl"
+      className={`rounded-2xl bg-white overflow-hidden transition-shadow ${
+        highlighted ? "ring-2 ring-primary shadow-md" : "border border-border"
       }`}
     >
-      {/* Reward photo */}
-      <div className="relative aspect-square overflow-hidden bg-secondary/40">
-        <img src={image} alt={imageAlt} className="w-full h-full object-cover" loading="lazy" />
-        {highlighted && (
-          <div className="absolute top-4 right-4 bg-foreground text-white px-3 py-1 rounded-full text-sm font-semibold">
-            Más popular
-          </div>
-        )}
-      </div>
+      {/* Collapsed row — always visible, always tappable */}
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-expanded={open}
+        aria-controls={panelId}
+        className="w-full flex items-center gap-4 p-4 sm:p-5 text-left hover:bg-secondary/40 transition-colors"
+      >
+        <span className="text-3xl sm:text-4xl font-poppins font-bold text-primary tabular-nums">
+          {amount}€
+        </span>
+        <span className="flex-1 min-w-0">
+          <span className="block font-poppins font-bold text-foreground leading-tight">
+            {shortLabel}
+          </span>
+          {highlighted && (
+            <span className="text-xs font-semibold text-primary uppercase tracking-wide">
+              Más popular
+            </span>
+          )}
+        </span>
+        <ChevronDown
+          className={`w-5 h-5 flex-shrink-0 text-foreground/40 transition-transform duration-200 ${
+            open ? "rotate-180" : ""
+          }`}
+        />
+      </button>
 
-      {/* Content */}
-      <div className="p-6 sm:p-7 flex flex-col flex-grow">
-        <div className="flex items-baseline gap-1.5 mb-4">
-          <span className="text-4xl font-poppins font-bold text-primary">{amount}</span>
-          <span className="text-xl text-foreground">{currency}</span>
-        </div>
-
-        <h3 className="text-2xl font-poppins font-bold text-foreground mb-2">{title}</h3>
-
-        <p className="text-foreground/70 mb-5 leading-relaxed">{description}</p>
-
-        <div className="mb-6 flex-grow">
-          <p className="text-xs font-bold text-foreground/50 uppercase tracking-wide mb-3">
-            Tu recompensa
-          </p>
-          <ul className="space-y-2">
+      {/* Expanded detail */}
+      {open && (
+        <div id={panelId} className="px-4 sm:px-5 pb-5 flex flex-col gap-4">
+          <img
+            src={image}
+            alt={imageAlt}
+            className="w-full h-44 sm:h-52 object-cover rounded-xl"
+            loading="lazy"
+          />
+          <p className="text-foreground/70 leading-relaxed">{description}</p>
+          <ul className="flex flex-col gap-1.5">
             {rewards.map((reward) => (
               <li key={reward} className="flex items-start gap-2 text-foreground">
-                <span className="text-primary mt-0.5 font-bold" aria-hidden="true">
+                <span className="text-primary font-bold mt-0.5" aria-hidden="true">
                   ✓
                 </span>
                 <span>{reward}</span>
               </li>
             ))}
           </ul>
+          <Button
+            onClick={onDonate}
+            size="lg"
+            className="w-full bg-primary hover:bg-primary/90 text-white font-semibold text-lg h-auto py-4"
+          >
+            <Heart className="w-5 h-5" />
+            Donar {amount}€
+          </Button>
         </div>
-
-        <Button
-          onClick={onDonate}
-          size="lg"
-          className="w-full bg-primary hover:bg-primary/90 text-white font-semibold text-lg h-auto py-4"
-        >
-          <Heart className="w-5 h-5" />
-          Donar {amount}€
-        </Button>
-      </div>
+      )}
     </div>
   );
 }
