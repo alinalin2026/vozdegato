@@ -1,12 +1,23 @@
 import { Button } from "@/components/ui/button";
 import { trackEvent } from "@/lib/analytics";
+import { SIGNER_NAME_KEY } from "@/pages/Gracias";
 import { MONTHLY_AMOUNTS } from "@shared/donaciones";
 import { Check, Facebook, Heart } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "wouter";
 
-const PETITION_URL = "https://vozdegato.com/peticion";
-const SHARE_TEXT = "España arde y a las colonias de gatos no las rescata nadie. Firma con nosotros:";
+// Two different audiences land here: people who signed the petition first
+// (Gracias -> checkout), and people who came straight from a donation ad
+// (Dona -> checkout, no petition involved). The share prompt has to match
+// which one actually happened, not assume the petition every time.
+const SHARE_PETITION = {
+  url: "https://vozdegato.com/peticion",
+  text: "España arde y a las colonias de gatos no las rescata nadie. Firma con nosotros:",
+};
+const SHARE_GENERIC = {
+  url: "https://vozdegato.com",
+  text: "Voz de Gato cuida colonias de gatos afectadas por los incendios en España. Conócenos:",
+};
 
 type Status =
   | { state: "loading" }
@@ -17,6 +28,7 @@ export default function DonacionCompletada() {
   const [status, setStatus] = useState<Status>({ state: "loading" });
   const [pending, setPending] = useState<number | null>(null);
   const [error, setError] = useState("");
+  const [isSigner] = useState(() => Boolean(sessionStorage.getItem(SIGNER_NAME_KEY)));
 
   useEffect(() => {
     const id = new URLSearchParams(window.location.search).get("session_id");
@@ -85,11 +97,17 @@ export default function DonacionCompletada() {
 
   const alreadyMonthly = status.state === "ok" && status.monthly;
 
+  const share = isSigner ? SHARE_PETITION : SHARE_GENERIC;
+
   const handleShare = () => {
-    trackEvent("share", { method: "facebook", content_type: "petition", item_id: "peticion_incendios" });
+    trackEvent("share", {
+      method: "facebook",
+      content_type: isSigner ? "petition" : "org",
+      item_id: isSigner ? "peticion_incendios" : "vozdegato_home",
+    });
     const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-      PETITION_URL
-    )}&quote=${encodeURIComponent(SHARE_TEXT)}`;
+      share.url
+    )}&quote=${encodeURIComponent(share.text)}`;
     window.open(url, "compartir-facebook", "width=600,height=520");
   };
 
@@ -208,8 +226,9 @@ export default function DonacionCompletada() {
               Sé la voz de los gatos en redes
             </h2>
             <p className="text-foreground/70 leading-relaxed max-w-sm mx-auto mb-6">
-              Ayúdanos a llegar a más gente. Cuantas más firmas, más fuerza para exigir el protocolo
-              de rescate.
+              {isSigner
+                ? "Ayúdanos a llegar a más gente. Cuantas más firmas, más fuerza para exigir el protocolo de rescate."
+                : "Ayúdanos a llegar a más gente para que más colonias reciban ayuda."}
             </p>
             <Button
               onClick={handleShare}
@@ -217,7 +236,7 @@ export default function DonacionCompletada() {
               className="bg-[#1877F2] hover:bg-[#1877F2]/90 text-white font-semibold h-auto py-4 px-8"
             >
               <Facebook className="w-5 h-5" fill="currentColor" />
-              Compartir la petición
+              {isSigner ? "Compartir la petición" : "Compartir Voz de Gato"}
             </Button>
           </div>
         )}
