@@ -124,8 +124,8 @@ export default function Dona() {
           <div className="container max-w-xl mx-auto flex flex-col gap-8">
             <div className="relative rounded-2xl overflow-hidden shadow-md">
               <img
-                src="/images/incendio-dos-gatos.jpg"
-                alt="Dos gatos en un camino de tierra con el humo de un incendio forestal al fondo"
+                src="/images/refugio-colonia.jpg"
+                alt="Varios gatos descansando tranquilos junto a las instalaciones del refugio de Voz de Gato, con el cartel de la protectora en primer plano"
                 className="w-full h-64 sm:h-80 object-cover"
               />
               <span className="absolute right-3 top-3 text-white/70 text-[10px] font-medium tracking-wide uppercase">
