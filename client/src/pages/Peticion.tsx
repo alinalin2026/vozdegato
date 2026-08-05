@@ -1,9 +1,10 @@
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, CheckCircle2 } from "lucide-react";
+import { SIGNER_NAME_KEY } from "@/pages/Gracias";
+import { ArrowLeft } from "lucide-react";
 import { useEffect, useState, type FormEvent } from "react";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 
-type Step = "hook" | "form" | "thanks";
+type Step = "hook" | "form";
 
 const SOURCES = [
   {
@@ -21,6 +22,7 @@ const SOURCES = [
 ];
 
 export default function Peticion() {
+  const [, navigate] = useLocation();
   const [step, setStep] = useState<Step>("hook");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -56,22 +58,14 @@ export default function Peticion() {
         setError(data.error || "No hemos podido guardar tu firma. Inténtalo de nuevo en unos minutos.");
         return;
       }
-      setCount(data.count);
-      setStep("thanks");
+      sessionStorage.setItem(SIGNER_NAME_KEY, name.trim());
+      navigate("/gracias");
     } catch {
       setError("No hemos podido guardar tu firma. Revisa tu conexión e inténtalo de nuevo.");
     } finally {
       setSubmitting(false);
     }
   };
-
-  const donate = (amount: string) => {
-    const subject = `Quiero donar ${amount}`;
-    const body = `Hola,\n\nAcabo de firmar la petición sobre el rescate de colonias de gatos en incendios y quiero colaborar con ${amount}. Decidme cómo puedo hacerlo.\n\nGracias.`;
-    window.location.href = `mailto:hola@vozdegato.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-  };
-
-  const firstName = name.trim().split(" ")[0] || "amigo de los gatos";
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -93,7 +87,7 @@ export default function Peticion() {
         <div className="container flex flex-col items-center">
           {/* Progress */}
           <div className="flex gap-2 mb-6">
-            {(["hook", "form", "thanks"] as Step[]).map((s) => (
+            {(["hook", "form"] as Step[]).map((s) => (
               <span
                 key={s}
                 className={`h-2 rounded-full transition-all ${
@@ -132,6 +126,13 @@ export default function Peticion() {
                 >
                   Firmar la petición
                 </Button>
+                {count !== null && count > 0 && (
+                  <p className="text-center text-sm text-foreground/60">
+                    Ya han firmado{" "}
+                    <strong className="text-foreground">{count.toLocaleString("es-ES")}</strong>{" "}
+                    {count === 1 ? "persona" : "personas"}.
+                  </p>
+                )}
               </div>
             )}
 
@@ -191,58 +192,6 @@ export default function Peticion() {
               </form>
             )}
 
-            {step === "thanks" && (
-              <div className="flex flex-col gap-5 p-7">
-                <div className="h-14 w-14 rounded-full bg-primary/10 flex items-center justify-center mx-auto">
-                  <CheckCircle2 className="w-7 h-7 text-primary" />
-                </div>
-                <h2 className="text-2xl font-poppins font-bold text-center text-balance">
-                  ¡Gracias, {firstName}!
-                </h2>
-                <p className="text-lg text-foreground/70 text-center leading-relaxed">
-                  Tu firma ya cuenta. En cuanto tengamos suficientes, la llevamos a la Generalitat.
-                </p>
-                <div className="bg-secondary/50 rounded-xl p-5 text-center">
-                  <p className="text-3xl font-poppins font-bold text-primary">
-                    {count !== null ? count.toLocaleString("es-ES") : "…"}
-                  </p>
-                  <p className="text-xs font-semibold uppercase tracking-wide text-foreground/60">
-                    personas han firmado
-                  </p>
-                </div>
-
-                <div className="border-t border-border pt-5 flex flex-col gap-3">
-                  <p className="text-base text-foreground/80 leading-relaxed">
-                    Firmar es gratis. Pero rescatar a un gato hoy cuesta dinero real: comida, agua, veterinario.
-                  </p>
-                  <div className="grid grid-cols-3 gap-2">
-                    {["5€", "10€", "20€"].map((amount) => (
-                      <button
-                        key={amount}
-                        type="button"
-                        onClick={() => donate(amount)}
-                        className="py-2.5 rounded-lg border-2 border-primary text-primary font-semibold hover:bg-primary/10 transition-colors"
-                      >
-                        {amount}
-                      </button>
-                    ))}
-                  </div>
-                  <Button
-                    size="lg"
-                    className="bg-primary hover:bg-primary/90 text-white font-semibold h-auto py-3.5"
-                    onClick={() => donate("otra cantidad")}
-                  >
-                    Quiero colaborar económicamente
-                  </Button>
-                  <Link
-                    href="/"
-                    className="text-center text-sm font-semibold text-foreground/60 hover:text-foreground transition-colors"
-                  >
-                    Ahora no, ya he firmado
-                  </Link>
-                </div>
-              </div>
-            )}
           </div>
 
           {/* Context below the card */}
