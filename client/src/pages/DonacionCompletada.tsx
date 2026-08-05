@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { trackEvent } from "@/lib/analytics";
 import { MONTHLY_AMOUNTS } from "@shared/donaciones";
 import { Check, Facebook, Heart } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -27,11 +28,24 @@ export default function DonacionCompletada() {
       .then((r) => (r.ok ? r.json() : null))
       .then((data) => {
         if (data?.paid) {
+          const monthly = data.mode === "subscription";
           setStatus({
             state: "ok",
             amount: data.amount ?? null,
-            monthly: data.mode === "subscription",
+            monthly,
             label: data.label ?? null,
+          });
+          trackEvent("purchase", {
+            transaction_id: id,
+            currency: "EUR",
+            value: data.amount ?? undefined,
+            items: [
+              {
+                item_id: monthly ? "socio_mensual" : `tier_${data.amount ?? "custom"}`,
+                item_name: data.label ?? (monthly ? "Socio/a mensual" : "Donación"),
+                price: data.amount ?? undefined,
+              },
+            ],
           });
         } else {
           setStatus({ state: "unknown" });
@@ -43,6 +57,11 @@ export default function DonacionCompletada() {
   const subscribe = async (amount: number) => {
     setPending(amount);
     setError("");
+    trackEvent("begin_checkout", {
+      currency: "EUR",
+      value: amount,
+      items: [{ item_id: "socio_mensual", item_name: `Socio/a — ${amount}€/mes`, price: amount }],
+    });
     try {
       const res = await fetch("/api/checkout", {
         method: "POST",
@@ -52,12 +71,14 @@ export default function DonacionCompletada() {
       const data = await res.json();
       if (!res.ok || !data.url) {
         setError(data.error || "No hemos podido abrir el pago. Inténtalo de nuevo.");
+        trackEvent("checkout_error", { amount, mode: "subscription", reason: data.error || "api_error" });
         setPending(null);
         return;
       }
       window.location.href = data.url;
     } catch {
       setError("No hemos podido abrir el pago. Revisa tu conexión e inténtalo de nuevo.");
+      trackEvent("checkout_error", { amount, mode: "subscription", reason: "network_error" });
       setPending(null);
     }
   };
@@ -65,6 +86,7 @@ export default function DonacionCompletada() {
   const alreadyMonthly = status.state === "ok" && status.monthly;
 
   const handleShare = () => {
+    trackEvent("share", { method: "facebook", content_type: "petition", item_id: "peticion_incendios" });
     const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
       PETITION_URL
     )}&quote=${encodeURIComponent(SHARE_TEXT)}`;

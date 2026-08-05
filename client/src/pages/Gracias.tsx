@@ -1,5 +1,6 @@
 import DonationTier from "@/components/DonationTier";
 import { Button } from "@/components/ui/button";
+import { trackEvent } from "@/lib/analytics";
 import { Check } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "wouter";
@@ -78,9 +79,14 @@ export default function Gracias() {
 
   const firstName = name.trim().split(" ")[0];
 
-  const handleDonate = async (amount: number) => {
+  const handleDonate = async (amount: number, label: string) => {
     setPending(amount);
     setError("");
+    trackEvent("begin_checkout", {
+      currency: "EUR",
+      value: amount,
+      items: [{ item_id: `tier_${amount}`, item_name: label, price: amount }],
+    });
     try {
       const res = await fetch("/api/checkout", {
         method: "POST",
@@ -90,12 +96,14 @@ export default function Gracias() {
       const data = await res.json();
       if (!res.ok || !data.url) {
         setError(data.error || "No hemos podido abrir el pago. Inténtalo de nuevo.");
+        trackEvent("checkout_error", { amount, reason: data.error || "api_error" });
         setPending(null);
         return;
       }
       window.location.href = data.url;
     } catch {
       setError("No hemos podido abrir el pago. Revisa tu conexión e inténtalo de nuevo.");
+      trackEvent("checkout_error", { amount, reason: "network_error" });
       setPending(null);
     }
   };
@@ -144,8 +152,16 @@ export default function Gracias() {
               highlighted={tier.highlighted}
               open={openTier === tier.amount}
               pending={pending === tier.amount}
-              onToggle={() => setOpenTier(openTier === tier.amount ? null : tier.amount)}
-              onDonate={() => handleDonate(tier.amount)}
+              onToggle={() => {
+                const opening = openTier !== tier.amount;
+                if (opening) {
+                  trackEvent("select_item", {
+                    items: [{ item_id: `tier_${tier.amount}`, item_name: tier.shortLabel, price: tier.amount }],
+                  });
+                }
+                setOpenTier(opening ? tier.amount : null);
+              }}
+              onDonate={() => handleDonate(tier.amount, tier.shortLabel)}
             />
           ))}
         </div>
@@ -157,7 +173,7 @@ export default function Gracias() {
               key={tier.amount}
               type="button"
               disabled={pending !== null}
-              onClick={() => handleDonate(tier.amount)}
+              onClick={() => handleDonate(tier.amount, tier.title)}
               className="rounded-xl border-2 border-primary/30 hover:border-primary hover:bg-primary/5 transition-colors p-4 text-left disabled:opacity-60"
             >
               <span className="block text-2xl font-poppins font-bold text-primary">

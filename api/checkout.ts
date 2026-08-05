@@ -66,7 +66,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
               currency: "eur",
               unit_amount: Math.round(amount * 100),
               product_data: {
-                name: monthly ? `Apoyo mensual a Voz de Gato` : `Donación — ${tier!.label}`,
+                name: monthly ? `Apoyo mensual a Voz de Gato` : `Voz de Gato — ${tier!.label}`,
                 description: monthly
                   ? "Ayudas a mantener las colonias todos los meses."
                   : "Gracias por ayudar a las colonias de gatos.",
