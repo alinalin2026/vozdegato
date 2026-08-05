@@ -1,7 +1,9 @@
 import { Button } from "@/components/ui/button";
+import PeticionBanner from "@/components/PeticionBanner";
 import { Mail, MapPin, Phone, Shield, Utensils, Heart } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { Link } from "wouter";
 
 /**
  * Voz de Gato - Home Page
@@ -59,7 +61,7 @@ export default function Home() {
               <p className="text-xs text-muted-foreground">Hablamos por ellos</p>
             </div>
           </div>
-          <nav className="hidden md:flex gap-8">
+          <nav className="hidden lg:flex items-center gap-6">
             <a href="#mision" className="text-foreground hover:text-primary transition-colors font-medium">
               Misión
             </a>
@@ -72,6 +74,12 @@ export default function Home() {
             <a href="#contacto" className="text-foreground hover:text-primary transition-colors font-medium">
               Contacto
             </a>
+            <Link
+              href="/peticion"
+              className="bg-primary/10 text-primary hover:bg-primary/20 transition-colors font-semibold px-3.5 py-1.5 rounded-full whitespace-nowrap"
+            >
+              Firma la petición
+            </Link>
           </nav>
         </div>
       </header>
@@ -467,6 +475,11 @@ export default function Home() {
                     Contacto
                   </a>
                 </li>
+                <li>
+                  <Link href="/peticion" className="text-white/70 hover:text-white transition-colors">
+                    Firma la petición
+                  </Link>
+                </li>
               </ul>
             </div>
 
@@ -513,6 +526,8 @@ export default function Home() {
           </div>
         </div>
       </footer>
+
+      <PeticionBanner />
     </div>
   );
 }
