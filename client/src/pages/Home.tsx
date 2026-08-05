@@ -1,11 +1,11 @@
 import { Button } from "@/components/ui/button";
-import { Mail, MapPin, Phone, Heart, Shield, Utensils } from "lucide-react";
+import { Cat, Mail, MapPin, Phone, Shield, Utensils, Heart } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
 /**
  * Voz de Gato - Home Page
- * 
+ *
  * Design Philosophy: Warm Advocacy
  * - Large, bold typography for accessibility (55+ readers)
  * - High contrast colors (warm orange + deep brown)
@@ -13,6 +13,13 @@ import { toast } from "sonner";
  * - Simple, direct language without corporate jargon
  * - Generous whitespace and breathing room
  */
+
+const TEAM_LEADERSHIP = [
+  { name: "Lucía Fernández García", role: "Fundadora y Directora de Rescate" },
+  { name: "Javier Morales Sanz", role: "Coordinador de Logística y Colonias" },
+];
+
+const TEAM_MEMBERS = ["Elena", "Sofía", "Mateo", "Martina", "Valeria"];
 
 export default function Home() {
   const [formData, setFormData] = useState({
@@ -29,10 +36,10 @@ export default function Home() {
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name || !formData.email || !formData.message) {
-      toast.error("Por favor, completa todos los campos");
+      toast.error("Nos falta algún dato: revisa el formulario, por favor");
       return;
     }
-    toast.success("Mensaje enviado. Nos pondremos en contacto pronto.");
+    toast.success("¡Gracias! Ya tenemos tu mensaje y te contestamos en cuanto podamos.");
     setFormData({ name: "", email: "", message: "" });
   };
 
@@ -42,11 +49,9 @@ export default function Home() {
       <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-border shadow-sm">
         <div className="container flex items-center justify-between py-4">
           <div className="flex items-center gap-3">
-            <img
-              src="/manus-storage/logo_d5e1fe8c.png"
-              alt="Voz de Gato"
-              className="h-12 w-12 object-contain"
-            />
+            <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+              <Cat className="h-7 w-7 text-primary" />
+            </div>
             <div>
               <h1 className="text-xl font-poppins font-bold text-primary">Voz de Gato</h1>
               <p className="text-xs text-muted-foreground">Hablamos por ellos</p>
@@ -58,6 +63,9 @@ export default function Home() {
             </a>
             <a href="#nosotros" className="text-foreground hover:text-primary transition-colors font-medium">
               Sobre Nosotros
+            </a>
+            <a href="#equipo" className="text-foreground hover:text-primary transition-colors font-medium">
+              Equipo
             </a>
             <a href="#contacto" className="text-foreground hover:text-primary transition-colors font-medium">
               Contacto
@@ -72,10 +80,10 @@ export default function Home() {
           {/* Hero Text */}
           <div className="space-y-6">
             <h1 className="text-5xl md:text-6xl font-poppins font-bold leading-tight text-foreground">
-              Los gatos merecen protección
+              Los gatos no pueden hablar. Nosotros hablamos por ellos.
             </h1>
             <p className="text-xl text-foreground/80 leading-relaxed">
-              Nosotros hablamos por ellos. Voz de Gato es una organización dedicada a garantizar que cada gato tenga un hogar seguro, comida suficiente y el amor que merece.
+              Desde 2024 rescatamos gatos en peligro, los esterilizamos, los curamos y no paramos hasta encontrarles un hogar de verdad. Voz de Gato existe para que ningún gato se quede solo.
             </p>
             <div className="flex gap-4 pt-4">
               <Button
@@ -89,8 +97,9 @@ export default function Home() {
                 size="lg"
                 variant="outline"
                 className="border-primary text-primary hover:bg-primary/10"
+                onClick={() => document.getElementById("nosotros")?.scrollIntoView({ behavior: "smooth" })}
               >
-                Más Información
+                Conócenos
               </Button>
             </div>
           </div>
@@ -98,8 +107,8 @@ export default function Home() {
           {/* Hero Image */}
           <div className="relative">
             <img
-              src="/manus-storage/hero_56a85f4d.jpg"
-              alt="Gatos en refugio"
+              src="/images/cuidadora-alimentando.jpg"
+              alt="Voluntaria de Voz de Gato dando de comer a una colonia de gatos"
               className="rounded-lg shadow-lg w-full h-auto object-cover"
             />
             <div className="absolute inset-0 rounded-lg bg-gradient-to-t from-black/20 to-transparent" />
@@ -122,7 +131,7 @@ export default function Home() {
               </div>
               <h3 className="text-2xl font-poppins font-bold text-foreground">Protección</h3>
               <p className="text-lg text-foreground/70">
-                Garantizar que cada gato esté seguro, protegido de peligros y maltrato.
+                Sacamos a los gatos de la calle y del peligro, y no los soltamos de la mano hasta que están a salvo.
               </p>
             </div>
 
@@ -133,7 +142,7 @@ export default function Home() {
               </div>
               <h3 className="text-2xl font-poppins font-bold text-foreground">Alimentación</h3>
               <p className="text-lg text-foreground/70">
-                Asegurar que todos los gatos tengan acceso a comida nutritiva y agua limpia.
+                Cada colonia que cuidamos tiene comida fresca y agua limpia todos los días, llueva o haga sol.
               </p>
             </div>
 
@@ -144,48 +153,52 @@ export default function Home() {
               </div>
               <h3 className="text-2xl font-poppins font-bold text-foreground">Amor</h3>
               <p className="text-lg text-foreground/70">
-                Proporcionar cuidado, atención y un hogar lleno de amor para cada felino.
+                Un gato que lo ha pasado mal necesita algo más que comida: necesita volver a confiar en alguien.
               </p>
             </div>
           </div>
 
-          <div className="bg-primary/10 border-l-4 border-primary p-8 rounded-lg">
+          <div className="bg-primary/10 border-l-4 border-primary p-8 rounded-lg mb-12">
             <p className="text-xl text-foreground leading-relaxed">
-              Fundada en 2024, Voz de Gato trabaja cada día para mejorar la vida de los gatos en nuestras comunidades. Creemos que cada gato merece ser escuchado, protegido y amado.
+              Empezamos en 2024 siendo cuatro personas con muchas ganas y pocos recursos. Hoy seguimos haciendo lo mismo de entonces: estar ahí, cada día, para los gatos que nadie más ve.
             </p>
+          </div>
+
+          {/* Reach stat */}
+          <div className="grid md:grid-cols-2 gap-8 items-center bg-secondary/40 rounded-lg overflow-hidden">
+            <img
+              src="/images/mapa-35-ubicaciones.jpg"
+              alt="Mapa de España con las 35 ubicaciones donde Voz de Gato cuida colonias de gatos"
+              className="w-full h-auto object-cover"
+            />
+            <div className="p-8">
+              <p className="text-3xl font-poppins font-bold text-primary mb-2">35 ubicaciones</p>
+              <p className="text-lg text-foreground/70">
+                Ahora mismo cuidamos colonias en 35 puntos repartidos por toda España. Detrás de cada punto del mapa hay gatos con nombre y personas que van a verlos cada semana.
+              </p>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Cat Photos Section */}
       <section className="py-20 md:py-28 bg-background">
-        <div className="container">
-          <h2 className="text-4xl md:text-5xl font-poppins font-bold text-center mb-16 text-foreground">
-            Gatos Saludables, Felices
+        <div className="container max-w-4xl mx-auto text-center">
+          <h2 className="text-4xl md:text-5xl font-poppins font-bold mb-16 text-foreground">
+            Gatos Sanos y Felices
           </h2>
 
-          <div className="grid md:grid-cols-2 gap-8">
-            <div className="relative group overflow-hidden rounded-lg shadow-lg">
-              <img
-                src="/manus-storage/cat_shelter_1_c53999f0.jpg"
-                alt="Gato en refugio"
-                className="w-full h-96 object-cover group-hover:scale-105 transition-transform duration-300"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-            </div>
-
-            <div className="relative group overflow-hidden rounded-lg shadow-lg">
-              <img
-                src="/manus-storage/cat_shelter_2_199f7bcd.jpg"
-                alt="Gatos en refugio"
-                className="w-full h-96 object-cover group-hover:scale-105 transition-transform duration-300"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-            </div>
+          <div className="relative group overflow-hidden rounded-lg shadow-lg">
+            <img
+              src="/images/gatos-refugio.jpg"
+              alt="Grupo de gatos rescatados descansando tranquilos en uno de nuestros refugios"
+              className="w-full h-auto max-h-[520px] object-cover group-hover:scale-105 transition-transform duration-300"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
           </div>
 
-          <p className="text-center text-lg text-foreground/70 mt-12 max-w-2xl mx-auto">
-            Nuestros refugios ofrecen un ambiente seguro y amoroso donde los gatos pueden recuperarse, jugar y encontrar sus familias para siempre.
+          <p className="text-lg text-foreground/70 mt-12 max-w-2xl mx-auto">
+            Esto es lo que buscamos con cada rescate: gatos tranquilos, bien alimentados y con ganas de jugar otra vez.
           </p>
         </div>
       </section>
@@ -199,15 +212,15 @@ export default function Home() {
 
           <div className="space-y-8 text-lg text-foreground/80 leading-relaxed">
             <p>
-              Voz de Gato es una organización no gubernamental (ONG) dedicada a la protección y los derechos de los gatos. Nuestro equipo está compuesto por voluntarios apasionados y profesionales comprometidos con mejorar la vida de los felinos.
+              Voz de Gato es una protectora de gatos. Nada de despachos ni de grandes discursos: somos un grupo de voluntarios y profesionales que un día decidimos que no podíamos mirar para otro lado.
             </p>
 
             <p>
-              Trabajamos en varios frentes: rescate de gatos en situación de riesgo, operaciones de esterilización y castración, atención veterinaria, y programas de adopción responsable. Cada gato que llega a nuestros refugios recibe cuidado integral y atención personalizada.
+              Rescatamos gatos en situación de riesgo, los esterilizamos, los llevamos al veterinario cuando lo necesitan y buscamos familias responsables dispuestas a adoptarlos. Ninguno de los que pasa por nuestras manos se queda sin nombre ni sin alguien que le pregunte cómo está.
             </p>
 
             <p>
-              Creemos que los gatos no son objetos, sino seres vivos que merecen respeto, protección y amor. Nuestra misión es ser la voz de aquellos que no pueden hablar por sí solos.
+              Para nosotros un gato no es un objeto ni un capricho: es un ser que siente y que sufre. Por eso somos su voz, la de quienes no pueden hablar por sí mismos.
             </p>
 
             <div className="bg-primary/5 p-8 rounded-lg border border-primary/20">
@@ -215,15 +228,15 @@ export default function Home() {
               <ul className="space-y-3">
                 <li className="flex gap-3">
                   <span className="text-primary font-bold">•</span>
-                  <span><strong>Compasión:</strong> Tratamos a cada gato con amor y respeto.</span>
+                  <span><strong>Compasión:</strong> cada gato que llega ha pasado por algo difícil, y lo tratamos con la paciencia que necesita, sin prisa.</span>
                 </li>
                 <li className="flex gap-3">
                   <span className="text-primary font-bold">•</span>
-                  <span><strong>Transparencia:</strong> Somos honestos sobre nuestro trabajo y nuestros desafíos.</span>
+                  <span><strong>Transparencia:</strong> contamos lo que hacemos bien y también lo que nos cuesta. No prometemos milagros, prometemos esfuerzo.</span>
                 </li>
                 <li className="flex gap-3">
                   <span className="text-primary font-bold">•</span>
-                  <span><strong>Sostenibilidad:</strong> Trabajamos para crear cambios duraderos en nuestras comunidades.</span>
+                  <span><strong>Constancia:</strong> no nos conformamos con un rescate puntual, trabajamos para que el cambio dure, colonia a colonia.</span>
                 </li>
               </ul>
             </div>
@@ -231,8 +244,64 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Team Section */}
+      <section id="equipo" className="py-20 md:py-28 bg-background">
+        <div className="container max-w-4xl mx-auto">
+          <h2 className="text-4xl md:text-5xl font-poppins font-bold text-center text-foreground">
+            Nuestro Equipo
+          </h2>
+          <p className="text-xl text-primary text-center font-semibold mt-3 mb-12">
+            Ellos son la voz de los que no la tienen
+          </p>
+
+          <div className="relative overflow-hidden rounded-lg shadow-lg mb-10">
+            <img
+              src="/images/equipo.jpg"
+              alt="El equipo de Voz de Gato junto a varios de los gatos que cuidan"
+              className="w-full h-auto object-cover"
+            />
+          </div>
+
+          <p className="text-lg text-foreground/80 leading-relaxed text-center max-w-2xl mx-auto mb-12">
+            Detrás de cada rescate, de cada colonia cuidada y de cada ronroneo recuperado hay un equipo humano entregado. Ellos son las manos que alimentan y los corazones que escuchan.
+          </p>
+
+          <div className="grid md:grid-cols-2 gap-8 mb-12">
+            <div className="bg-white p-8 rounded-lg border border-border">
+              <h3 className="text-xl font-poppins font-bold text-foreground mb-5">Dirección</h3>
+              <ul className="space-y-4">
+                {TEAM_LEADERSHIP.map((person) => (
+                  <li key={person.name}>
+                    <p className="text-lg font-semibold text-foreground">{person.name}</p>
+                    <p className="text-foreground/70">{person.role}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="bg-white p-8 rounded-lg border border-border">
+              <h3 className="text-xl font-poppins font-bold text-foreground mb-5">Equipo de cuidado diario</h3>
+              <ul className="flex flex-wrap gap-x-6 gap-y-3">
+                {TEAM_MEMBERS.map((name) => (
+                  <li key={name} className="text-lg font-semibold text-foreground">
+                    {name}
+                  </li>
+                ))}
+              </ul>
+              <p className="text-foreground/70 mt-4">
+                Se ocupan cada día de las 35 colonias: comida, agua limpia, revisiones y mucho cariño.
+              </p>
+            </div>
+          </div>
+
+          <p className="text-lg text-foreground/80 leading-relaxed text-center max-w-2xl mx-auto">
+            Siete personas, una misma misión: ser, día tras día, la Voz de Gato. Porque ellos no pueden hablar, pero nosotros hablamos por ellos.
+          </p>
+        </div>
+      </section>
+
       {/* Contact Section */}
-      <section id="contacto" className="py-20 md:py-28 bg-background">
+      <section id="contacto" className="py-20 md:py-28 bg-white">
         <div className="container">
           <h2 className="text-4xl md:text-5xl font-poppins font-bold text-center mb-16 text-foreground">
             Contacto
@@ -283,7 +352,7 @@ export default function Home() {
             </div>
 
             {/* Contact Form */}
-            <div className="bg-white p-8 rounded-lg shadow-lg">
+            <div className="bg-background p-8 rounded-lg shadow-lg">
               <form onSubmit={handleFormSubmit} className="space-y-6">
                 <div>
                   <label htmlFor="name" className="block text-lg font-semibold text-foreground mb-2">
@@ -341,7 +410,7 @@ export default function Home() {
 
               <div className="mt-8 p-4 bg-primary/5 rounded-lg text-center">
                 <p className="text-foreground/70 text-sm">
-                  🐱 Responderemos a tu mensaje en el menor tiempo posible.
+                  🐱 Te contestamos lo antes posible.
                 </p>
               </div>
             </div>
@@ -356,11 +425,9 @@ export default function Home() {
             {/* Brand */}
             <div className="space-y-4">
               <div className="flex items-center gap-2">
-                <img
-                  src="/manus-storage/logo_d5e1fe8c.png"
-                  alt="Voz de Gato"
-                  className="h-10 w-10 object-contain"
-                />
+                <div className="h-10 w-10 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0">
+                  <Cat className="h-6 w-6 text-primary" />
+                </div>
                 <h3 className="text-xl font-poppins font-bold">Voz de Gato</h3>
               </div>
               <p className="text-white/70">
@@ -380,6 +447,11 @@ export default function Home() {
                 <li>
                   <a href="#nosotros" className="text-white/70 hover:text-white transition-colors">
                     Sobre Nosotros
+                  </a>
+                </li>
+                <li>
+                  <a href="#equipo" className="text-white/70 hover:text-white transition-colors">
+                    Equipo
                   </a>
                 </li>
                 <li>
