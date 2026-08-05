@@ -95,9 +95,9 @@ export default function Peticion() {
                   <img
                     src="/images/incendio-colonia.jpg"
                     alt="Ilustración: una colonia de gatos observa un incendio forestal que avanza hacia su pueblo"
-                    className="w-full h-60 object-cover object-[50%_62%]"
+                    className="w-full h-60 object-cover object-[50%_55%]"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
                   <span className="absolute right-3 top-3 text-white/60 text-[10px] font-medium tracking-wide uppercase">
                     Ilustración
                   </span>
