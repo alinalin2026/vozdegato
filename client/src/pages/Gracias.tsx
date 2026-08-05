@@ -1,6 +1,6 @@
 import DonationTier from "@/components/DonationTier";
 import { Button } from "@/components/ui/button";
-import { Heart } from "lucide-react";
+import { ChevronDown, Heart } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "wouter";
 
@@ -67,10 +67,47 @@ const BIG_TIERS = [
 
 export default function Gracias() {
   const [name, setName] = useState("");
+  const [showCue, setShowCue] = useState(true);
 
   useEffect(() => {
     setName(sessionStorage.getItem(SIGNER_NAME_KEY) || "");
   }, []);
+
+  // Nudge the page down once after a beat, so the reward tiers are visible
+  // without the visitor having to go looking for them. Backs off the moment
+  // they scroll themselves, and never fires for reduced-motion users.
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    let cancelled = false;
+    const cancel = () => {
+      cancelled = true;
+    };
+    const events = ["wheel", "touchstart", "keydown"] as const;
+    events.forEach((e) => window.addEventListener(e, cancel, { passive: true }));
+
+    const timer = window.setTimeout(() => {
+      if (!cancelled && window.scrollY < 40) {
+        window.scrollTo({ top: window.innerHeight, behavior: "smooth" });
+      }
+    }, 2000);
+
+    return () => {
+      window.clearTimeout(timer);
+      events.forEach((e) => window.removeEventListener(e, cancel));
+    };
+  }, []);
+
+  // Hide the scroll cue once they're past the hero
+  useEffect(() => {
+    const onScroll = () => setShowCue(window.scrollY < 120);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const scrollToDonations = () => {
+    document.getElementById("donaciones")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   const firstName = name.trim().split(" ")[0];
 
@@ -115,10 +152,22 @@ export default function Gracias() {
             <strong className="text-primary font-poppins">más de 20.000 firmas</strong> pidiendo un
             protocolo de rescate animal en catástrofes. La tuya suma.
           </p>
+
+          {/* Scroll cue toward the donation tiers */}
+          <button
+            type="button"
+            onClick={scrollToDonations}
+            className={`mt-10 inline-flex flex-col items-center gap-1.5 text-primary font-semibold transition-opacity duration-300 hover:opacity-80 ${
+              showCue ? "opacity-100" : "opacity-0 pointer-events-none"
+            }`}
+          >
+            Ahora puedes ayudarnos un poco más
+            <ChevronDown className="w-6 h-6 animate-bounce motion-reduce:animate-none" />
+          </button>
         </div>
 
         {/* Donation bridge */}
-        <div className="text-center max-w-2xl mx-auto mb-10">
+        <div id="donaciones" className="text-center max-w-2xl mx-auto mb-10 scroll-mt-24">
           <h2 className="text-2xl md:text-3xl font-poppins font-bold mb-3 text-balance">
             Firmar es gratis. Cuidar de ellos, no.
           </h2>
