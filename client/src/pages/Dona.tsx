@@ -102,6 +102,13 @@ export default function Dona() {
                   className="w-full h-36 sm:h-44 object-cover"
                 />
               </div>
+              <div className="col-span-2 rounded-xl overflow-hidden shadow-md">
+                <img
+                  src="/images/mision-guadalajara-dos-gatos.jpg"
+                  alt="Dos gatos de la colonia observan la cámara con el incendio activo de fondo en la sierra de Guadalajara"
+                  className="w-full h-48 sm:h-60 object-cover"
+                />
+              </div>
             </div>
 
             <p className="text-center text-xs text-foreground/60 leading-relaxed max-w-md mx-auto mt-5">
