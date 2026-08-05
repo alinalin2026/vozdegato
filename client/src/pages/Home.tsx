@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Cat, Mail, MapPin, Phone, Shield, Utensils, Heart } from "lucide-react";
+import { Mail, MapPin, Phone, Shield, Utensils, Heart } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -49,9 +49,11 @@ export default function Home() {
       <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-border shadow-sm">
         <div className="container flex items-center justify-between py-4">
           <div className="flex items-center gap-3">
-            <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-              <Cat className="h-7 w-7 text-primary" />
-            </div>
+            <img
+              src="/images/logo-mark.png"
+              alt="Voz de Gato"
+              className="h-12 w-12 object-contain flex-shrink-0"
+            />
             <div>
               <h1 className="text-xl font-poppins font-bold text-primary">Voz de Gato</h1>
               <p className="text-xs text-muted-foreground">Hablamos por ellos</p>
@@ -107,8 +109,8 @@ export default function Home() {
           {/* Hero Image */}
           <div className="relative">
             <img
-              src="/images/cuidadora-alimentando.jpg"
-              alt="Voluntaria de Voz de Gato dando de comer a una colonia de gatos"
+              src="/images/gatos-refugio.jpg"
+              alt="Gatos rescatados y sanos descansando en nuestro refugio, con el logo de Voz de Gato en la pared"
               className="rounded-lg shadow-lg w-full h-auto object-cover"
             />
             <div className="absolute inset-0 rounded-lg bg-gradient-to-t from-black/20 to-transparent" />
@@ -158,13 +160,39 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="bg-primary/10 border-l-4 border-primary p-8 rounded-lg mb-12">
+          <div className="bg-primary/10 border-l-4 border-primary p-8 rounded-lg">
             <p className="text-xl text-foreground leading-relaxed">
               Empezamos en 2024 siendo cuatro personas con muchas ganas y pocos recursos. Hoy seguimos haciendo lo mismo de entonces: estar ahí, cada día, para los gatos que nadie más ve.
             </p>
           </div>
+        </div>
+      </section>
 
-          {/* Reach stat */}
+      {/* Daily Care Section */}
+      <section className="py-20 md:py-28 bg-background">
+        <div className="container max-w-4xl mx-auto text-center">
+          <h2 className="text-4xl md:text-5xl font-poppins font-bold mb-16 text-foreground">
+            Así Cuidamos Cada Día
+          </h2>
+
+          <div className="relative group overflow-hidden rounded-lg shadow-lg">
+            <img
+              src="/images/cuidadora-alimentando.jpg"
+              alt="Voluntaria de Voz de Gato dando de comer a una colonia de gatos"
+              className="w-full h-auto max-h-[520px] object-cover group-hover:scale-105 transition-transform duration-300"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+          </div>
+
+          <p className="text-lg text-foreground/70 mt-12 max-w-2xl mx-auto">
+            Comida, agua limpia y una visita diaria, haga frío o calor. Así es el trabajo real, todos los días del año.
+          </p>
+        </div>
+      </section>
+
+      {/* Reach Section */}
+      <section className="py-20 md:py-28 bg-white">
+        <div className="container max-w-4xl mx-auto">
           <div className="grid md:grid-cols-2 gap-8 items-center bg-secondary/40 rounded-lg overflow-hidden">
             <img
               src="/images/mapa-35-ubicaciones.jpg"
@@ -181,30 +209,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Cat Photos Section */}
-      <section className="py-20 md:py-28 bg-background">
-        <div className="container max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl md:text-5xl font-poppins font-bold mb-16 text-foreground">
-            Gatos Sanos y Felices
-          </h2>
-
-          <div className="relative group overflow-hidden rounded-lg shadow-lg">
-            <img
-              src="/images/gatos-refugio.jpg"
-              alt="Grupo de gatos rescatados descansando tranquilos en uno de nuestros refugios"
-              className="w-full h-auto max-h-[520px] object-cover group-hover:scale-105 transition-transform duration-300"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-          </div>
-
-          <p className="text-lg text-foreground/70 mt-12 max-w-2xl mx-auto">
-            Esto es lo que buscamos con cada rescate: gatos tranquilos, bien alimentados y con ganas de jugar otra vez.
-          </p>
-        </div>
-      </section>
-
       {/* About Section */}
-      <section id="nosotros" className="py-20 md:py-28 bg-white">
+      <section id="nosotros" className="py-20 md:py-28 bg-background">
         <div className="container max-w-3xl">
           <h2 className="text-4xl md:text-5xl font-poppins font-bold mb-12 text-foreground">
             Sobre Nosotros
@@ -245,7 +251,7 @@ export default function Home() {
       </section>
 
       {/* Team Section */}
-      <section id="equipo" className="py-20 md:py-28 bg-background">
+      <section id="equipo" className="py-20 md:py-28 bg-white">
         <div className="container max-w-4xl mx-auto">
           <h2 className="text-4xl md:text-5xl font-poppins font-bold text-center text-foreground">
             Nuestro Equipo
@@ -267,7 +273,7 @@ export default function Home() {
           </p>
 
           <div className="grid md:grid-cols-2 gap-8 mb-12">
-            <div className="bg-white p-8 rounded-lg border border-border">
+            <div className="bg-primary/5 p-8 rounded-lg border border-primary/20">
               <h3 className="text-xl font-poppins font-bold text-foreground mb-5">Dirección</h3>
               <ul className="space-y-4">
                 {TEAM_LEADERSHIP.map((person) => (
@@ -279,7 +285,7 @@ export default function Home() {
               </ul>
             </div>
 
-            <div className="bg-white p-8 rounded-lg border border-border">
+            <div className="bg-primary/5 p-8 rounded-lg border border-primary/20">
               <h3 className="text-xl font-poppins font-bold text-foreground mb-5">Equipo de cuidado diario</h3>
               <ul className="flex flex-wrap gap-x-6 gap-y-3">
                 {TEAM_MEMBERS.map((name) => (
@@ -301,7 +307,7 @@ export default function Home() {
       </section>
 
       {/* Contact Section */}
-      <section id="contacto" className="py-20 md:py-28 bg-white">
+      <section id="contacto" className="py-20 md:py-28 bg-background">
         <div className="container">
           <h2 className="text-4xl md:text-5xl font-poppins font-bold text-center mb-16 text-foreground">
             Contacto
@@ -352,7 +358,7 @@ export default function Home() {
             </div>
 
             {/* Contact Form */}
-            <div className="bg-background p-8 rounded-lg shadow-lg">
+            <div className="bg-white p-8 rounded-lg shadow-lg">
               <form onSubmit={handleFormSubmit} className="space-y-6">
                 <div>
                   <label htmlFor="name" className="block text-lg font-semibold text-foreground mb-2">
@@ -425,9 +431,11 @@ export default function Home() {
             {/* Brand */}
             <div className="space-y-4">
               <div className="flex items-center gap-2">
-                <div className="h-10 w-10 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0">
-                  <Cat className="h-6 w-6 text-primary" />
-                </div>
+                <img
+                  src="/images/logo-mark.png"
+                  alt="Voz de Gato"
+                  className="h-10 w-10 object-contain flex-shrink-0"
+                />
                 <h3 className="text-xl font-poppins font-bold">Voz de Gato</h3>
               </div>
               <p className="text-white/70">
