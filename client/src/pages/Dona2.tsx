@@ -288,43 +288,29 @@ export default function Dona2() {
             <div className="grid grid-cols-2 gap-3">
               <div className="col-span-2 rounded-xl overflow-hidden shadow-md">
                 <img
-                  src="/images/mision-guadalajara-equipo.jpg"
-                  alt="El equipo de Voz de Gato posa con los gatos rescatados durante la misión de emergencia en la sierra de Guadalajara, con el humo del incendio al fondo"
+                  src="/images/mision-guadalajara-real-equipo.jpg"
+                  alt="El equipo de Voz de Gato posa junto a los transportines con los gatos rescatados, con el incendio activo en las colinas al fondo"
                   className="w-full h-56 sm:h-72 object-cover"
                 />
               </div>
               <div className="rounded-xl overflow-hidden shadow-md">
                 <img
-                  src="/images/mision-guadalajara-alimentando.jpg"
-                  alt="Voluntaria de Voz de Gato dando de comer a un gato junto a los transportines, con otro gato observando entre la ceniza"
-                  className="w-full h-36 sm:h-44 object-cover"
+                  src="/images/mision-guadalajara-real-alimentando-1.jpg"
+                  alt="Voluntaria de Voz de Gato agachada dando de comer a tres gatos de la colonia en la ladera quemada, junto a los transportines"
+                  className="w-full h-44 sm:h-56 object-cover"
                 />
               </div>
               <div className="rounded-xl overflow-hidden shadow-md">
                 <img
-                  src="/images/mision-guadalajara-manta.jpg"
-                  alt="Voluntaria sujetando a un gato rescatado envuelto en una manta, con dos gatos más cerca en la ladera quemada"
-                  className="w-full h-36 sm:h-44 object-cover"
-                />
-              </div>
-              <div className="rounded-xl overflow-hidden shadow-md">
-                <img
-                  src="/images/mision-guadalajara-transporte.jpg"
-                  alt="Voluntario caminando con un transportín y una manta entre los gatos de la colonia, en la zona afectada por el incendio"
-                  className="w-full h-36 sm:h-44 object-cover"
-                />
-              </div>
-              <div className="rounded-xl overflow-hidden shadow-md">
-                <img
-                  src="/images/mision-guadalajara-colonia.jpg"
-                  alt="Voluntaria dando de comer y de beber a varios gatos de la colonia en la ladera quemada de la sierra de Guadalajara"
-                  className="w-full h-36 sm:h-44 object-cover"
+                  src="/images/mision-guadalajara-real-alimentando-2.jpg"
+                  alt="Voluntaria dando de comer a un gato mientras otro gato blanco y negro observa a lo lejos entre la ceniza"
+                  className="w-full h-44 sm:h-56 object-cover"
                 />
               </div>
               <div className="col-span-2 rounded-xl overflow-hidden shadow-md">
                 <img
-                  src="/images/mision-guadalajara-dos-gatos.jpg"
-                  alt="Dos gatos de la colonia observan la cámara con el incendio activo de fondo en la sierra de Guadalajara"
+                  src="/images/mision-guadalajara-real-transporte.jpg"
+                  alt="Voluntario caminando con un transportín y una manta entre los gatos de la colonia, en la zona afectada por el incendio"
                   className="w-full h-48 sm:h-60 object-cover"
                 />
               </div>
