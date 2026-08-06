@@ -2,9 +2,9 @@ import { trackEvent } from "@/lib/analytics";
 import { useState } from "react";
 
 /**
- * Shared by Dona3's secondary donate CTAs (sticky bar, reward packs).
- * Deliberately not shared with DonationButtons, which backs the live /dona
- * page — keeping that component untouched avoids any risk to it.
+ * Shared by /dona's secondary donate CTAs (sticky bar, reward packs).
+ * Deliberately not merged into DonationButtons' own fetch logic, to keep
+ * that component's behavior simple to reason about on its own.
  */
 export function useQuickCheckout(location: string) {
   const [pending, setPending] = useState<number | null>(null);

@@ -1,7 +1,7 @@
 import { trackEvent } from "@/lib/analytics";
 import { useQuickCheckout } from "@/hooks/useQuickCheckout";
 
-// Mobile-only quick-donate bar for Dona3.
+// Mobile-only quick-donate bar for /dona.
 const QUICK_AMOUNTS = [5, 10, 20];
 
 export default function StickyDonateBar() {
