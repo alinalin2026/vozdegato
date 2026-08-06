@@ -311,7 +311,7 @@ export default function Dona2() {
                 <img
                   src="/images/mision-guadalajara-real-transporte.jpg"
                   alt="Voluntario caminando con un transportín y una manta entre los gatos de la colonia, en la zona afectada por el incendio"
-                  className="w-full h-48 sm:h-60 object-cover"
+                  className="w-full h-48 sm:h-60 object-cover object-top"
                 />
               </div>
             </div>
