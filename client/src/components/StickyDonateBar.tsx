@@ -1,51 +1,11 @@
 import { trackEvent } from "@/lib/analytics";
-import { useState } from "react";
+import { useQuickCheckout } from "@/hooks/useQuickCheckout";
 
-// Mobile-only quick-donate bar for Dona3. Deliberately NOT sharing state/logic
-// with DonationButtons — that component backs the live /dona page and
-// shouldn't be touched to ship this variant. Small duplication here is the
-// safer trade-off.
+// Mobile-only quick-donate bar for Dona3.
 const QUICK_AMOUNTS = [5, 10, 20];
 
 export default function StickyDonateBar() {
-  const [pending, setPending] = useState<number | null>(null);
-
-  const handleDonate = async (amount: number) => {
-    setPending(amount);
-    trackEvent("begin_checkout", {
-      currency: "EUR",
-      value: amount,
-      items: [
-        { item_id: `tier_${amount}`, item_name: `${amount}€`, price: amount },
-      ],
-      location: "sticky_bar",
-    });
-    try {
-      const res = await fetch("/api/checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ amount }),
-      });
-      const data = await res.json();
-      if (!res.ok || !data.url) {
-        trackEvent("checkout_error", {
-          amount,
-          reason: data.error || "api_error",
-          location: "sticky_bar",
-        });
-        setPending(null);
-        return;
-      }
-      window.location.href = data.url;
-    } catch {
-      trackEvent("checkout_error", {
-        amount,
-        reason: "network_error",
-        location: "sticky_bar",
-      });
-      setPending(null);
-    }
-  };
+  const { pending, donate } = useQuickCheckout("sticky_bar");
 
   const scrollToDonar = () => {
     trackEvent("cta_click", { location: "sticky_bar", label: "Donar" });
@@ -62,7 +22,7 @@ export default function StickyDonateBar() {
             key={amount}
             type="button"
             disabled={pending !== null}
-            onClick={() => handleDonate(amount)}
+            onClick={() => donate(amount)}
             className="py-3 text-center font-poppins font-bold text-primary border-r border-border disabled:opacity-60"
           >
             {pending === amount ? "…" : `${amount}€`}
