@@ -61,8 +61,8 @@ export default function Dona3() {
         <section className="relative">
           <div className="relative h-72 sm:h-96 overflow-hidden">
             <img
-              src="/images/incendio-muro.jpg"
-              alt="Una colonia de gatos observa el humo de un incendio forestal desde un muro de piedra"
+              src="/images/incendio-gatita-manta.jpg"
+              alt="Una gatita rescatada sentada sobre una manta, con el terreno calcinado por el incendio de fondo"
               className="w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
@@ -147,8 +147,56 @@ export default function Dona3() {
           </div>
         </section>
 
-        {/* Real mission photos — moved ABOVE the donation ask so evidence
-            comes before the payment form, not after it */}
+        {/* Raw emergency photos — the cats as found, before the team's
+            response. Goes first so the urgency reads before the competence
+            angle of the mission photos below it. */}
+        <section className="py-12 md:py-16">
+          <div className="container max-w-xl mx-auto">
+            <p className="text-center text-[11px] font-semibold tracking-wide uppercase text-primary/80 mb-6">
+              Así los encontramos, en plena zona quemada
+            </p>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div className="rounded-xl overflow-hidden shadow-md">
+                <img
+                  src="/images/incendio-gatito-agazapado.jpg"
+                  alt="Un gatito agazapado sobre la tierra quemada, con el humo del incendio todavía visible al fondo"
+                  className="w-full h-44 sm:h-56 object-cover"
+                />
+              </div>
+              <div className="rounded-xl overflow-hidden shadow-md">
+                <img
+                  src="/images/incendio-gatita-tricolor.jpg"
+                  alt="Una gatita tricolor de pie sobre el terreno calcinado, mirando a cámara, con humo entre los árboles al fondo"
+                  className="w-full h-44 sm:h-56 object-cover"
+                />
+              </div>
+              <div className="rounded-xl overflow-hidden shadow-md">
+                <img
+                  src="/images/incendio-gatito-pista.jpg"
+                  alt="Un gatito caminando solo por una pista de tierra junto a la franja de vegetación quemada"
+                  className="w-full h-44 sm:h-56 object-cover"
+                />
+              </div>
+              <div className="rounded-xl overflow-hidden shadow-md">
+                <img
+                  src="/images/incendio-gatito-ladera.jpg"
+                  alt="Un gatito en primer plano sobre la ladera quemada, con el humo del incendio detrás de él"
+                  className="w-full h-44 sm:h-56 object-cover"
+                />
+              </div>
+            </div>
+
+            <p className="text-center text-xs text-foreground/60 leading-relaxed max-w-md mx-auto mt-5">
+              Gatitos deambulando solos entre la ceniza tras el paso del
+              fuego, sin agua ni comida cerca. Así los fuimos encontrando en
+              la sierra de Guadalajara.
+            </p>
+          </div>
+        </section>
+
+        {/* Real mission photos — the team's response, right after the raw
+            evidence above and still above the donation ask */}
         <section className="py-12 md:py-16 bg-white">
           <div className="container max-w-xl mx-auto">
             <p className="text-center text-[11px] font-semibold tracking-wide uppercase text-primary/80 mb-6">
