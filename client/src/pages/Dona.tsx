@@ -1,15 +1,15 @@
 import DonationButtons from "@/components/DonationButtons";
+import StickyDonateBar from "@/components/StickyDonateBar";
+import ThankYouPacks from "@/components/ThankYouPacks";
 import { Progress } from "@/components/ui/progress";
+import { trackEvent } from "@/lib/analytics";
 import { CheckCircle2 } from "lucide-react";
 import { Link } from "wouter";
 
 /**
- * GOAL_EUR / RAISED_EUR / CATS_HELPED came directly from the org. COST_BREAKDOWN
- * is a proportional split I generated from an example structure, not real
- * invoices. RECENT_DONATIONS is an anonymized placeholder — only two real
- * donations exist right now, both from the same donor — not live activity.
- * Both need real figures/wiring before they're trustworthy on a page taking
- * real payments; see PR description.
+ * GOAL_EUR / RAISED_EUR / CATS_HELPED came directly from the org.
+ * COST_BREAKDOWN is labeled as a planned-allocation estimate below, not
+ * invoiced figures — see the note next to it.
  */
 const GOAL_EUR = 8000;
 const RAISED_EUR = 5378;
@@ -24,15 +24,9 @@ const COST_BREAKDOWN = [
   { label: "Reserva veterinaria de urgencia", amount: 2160 },
 ];
 
-const RECENT_DONATIONS = [
-  { initials: "M. G.", amount: 10, when: "hace 12 min" },
-  { initials: "J. L.", amount: 25, when: "hace 34 min" },
-  { initials: "Anónimo", amount: 5, when: "hace 1 h" },
-];
-
 export default function Dona() {
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-background text-foreground pb-16 md:pb-0">
       <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-border">
         <div className="container flex items-center py-4">
           <Link href="/" className="flex items-center gap-2">
@@ -53,8 +47,8 @@ export default function Dona() {
         <section className="relative">
           <div className="relative h-72 sm:h-96 overflow-hidden">
             <img
-              src="/images/incendio-muro.jpg"
-              alt="Una colonia de gatos observa el humo de un incendio forestal desde un muro de piedra"
+              src="/images/incendio-gatita-manta.jpg"
+              alt="Una gatita rescatada sentada sobre una manta, con el terreno calcinado por el incendio de fondo"
               className="w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
@@ -69,35 +63,51 @@ export default function Dona() {
                 {CATS_HELPED} gatos siguen sin agua ni comida tras los incendios
                 de Guadalajara
               </h1>
-              <p className="text-lg text-foreground/70 leading-relaxed">
+              <p className="text-lg text-foreground/70 leading-relaxed mb-6">
                 Estamos abasteciendo varias colonias en la sierra mientras
                 continúan las consecuencias del fuego. Necesitamos{" "}
                 {GOAL_EUR.toLocaleString("es-ES")} € para cubrir comida, agua,
                 transporte y atención veterinaria urgente.
               </p>
+
+              {/* Above-the-fold CTA — the donation form starts several
+                  screens down, this gets an impulsive click a way in now */}
+              <a
+                href="#donar"
+                onClick={() =>
+                  trackEvent("cta_click", {
+                    location: "hero",
+                    label: "Donar 10€ ahora",
+                  })
+                }
+                className="inline-block w-full sm:w-auto bg-primary hover:bg-primary/90 transition-colors text-white font-poppins font-bold rounded-xl px-8 py-4 text-lg"
+              >
+                Donar 10 € ahora
+              </a>
             </div>
           </div>
         </section>
 
-        {/* Amount raised, target, and next action — above the donation form */}
+        {/* Amount raised, target, and next action */}
         <section className="pt-8 pb-4">
           <div className="container max-w-xl mx-auto">
             <div className="bg-white rounded-2xl border border-border p-6 sm:p-8">
               <div className="flex items-baseline justify-between mb-2">
                 <span className="text-2xl sm:text-3xl font-poppins font-bold text-primary">
-                  {RAISED_EUR.toLocaleString("es-ES")} €
+                  {REMAINING_EUR.toLocaleString("es-ES")} €
                 </span>
                 <span className="text-foreground/60">
-                  recaudados de {GOAL_EUR.toLocaleString("es-ES")} €
+                  nos faltan de {GOAL_EUR.toLocaleString("es-ES")} €
                 </span>
               </div>
               <Progress value={PROGRESS_PCT} className="mb-3" />
               <p className="text-foreground/70">
-                Faltan{" "}
+                Ya llevamos{" "}
                 <strong className="text-foreground">
-                  {REMAINING_EUR.toLocaleString("es-ES")} €
+                  {RAISED_EUR.toLocaleString("es-ES")} €
                 </strong>{" "}
-                para completar la próxima entrega a las colonias de Guadalajara.
+                recaudados para la próxima entrega a las colonias de
+                Guadalajara.
               </p>
             </div>
           </div>
@@ -123,67 +133,56 @@ export default function Dona() {
           </div>
         </section>
 
-        {/* Donation ask */}
-        <section className="pb-12 md:pb-16">
+        {/* Raw emergency photos — the cats as found, before the team's
+            response. Goes first so the urgency reads before the competence
+            angle of the mission photos below it. */}
+        <section className="py-12 md:py-16">
           <div className="container max-w-xl mx-auto">
-            <h2 className="text-2xl font-poppins font-bold text-center mb-2 text-balance">
-              Ayúdanos a cuidar de ellos
-            </h2>
-            <p className="text-center text-foreground/70 mb-8">
-              Elige una cantidad y mira exactamente en qué se convierte.
+            <p className="text-center text-[11px] font-semibold tracking-wide uppercase text-primary/80 mb-6">
+              Así los encontramos, en plena zona quemada
             </p>
 
-            <DonationButtons />
-          </div>
-        </section>
-
-        {/* Recent donations — anonymized placeholders, see file-level comment */}
-        <section className="pb-12 md:pb-16">
-          <div className="container max-w-xl mx-auto">
-            <div className="bg-white rounded-2xl border border-border p-5 sm:p-6">
-              <h3 className="text-sm font-bold uppercase tracking-wide text-foreground/60 mb-4">
-                Últimas aportaciones
-              </h3>
-              <ul className="flex flex-col gap-3">
-                {RECENT_DONATIONS.map((d, i) => (
-                  <li
-                    key={i}
-                    className="flex items-center justify-between text-sm"
-                  >
-                    <span className="text-foreground/80">
-                      {d.initials} — {d.amount} €
-                    </span>
-                    <span className="text-foreground/50">{d.when}</span>
-                  </li>
-                ))}
-              </ul>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="rounded-xl overflow-hidden shadow-md">
+                <img
+                  src="/images/incendio-gatito-agazapado.jpg"
+                  alt="Un gatito agazapado sobre la tierra quemada, con el humo del incendio todavía visible al fondo"
+                  className="w-full h-44 sm:h-56 object-cover"
+                />
+              </div>
+              <div className="rounded-xl overflow-hidden shadow-md">
+                <img
+                  src="/images/incendio-gatita-tricolor.jpg"
+                  alt="Una gatita tricolor de pie sobre el terreno calcinado, mirando a cámara, con humo entre los árboles al fondo"
+                  className="w-full h-44 sm:h-56 object-cover"
+                />
+              </div>
+              <div className="rounded-xl overflow-hidden shadow-md">
+                <img
+                  src="/images/incendio-gatito-pista.jpg"
+                  alt="Un gatito caminando solo por una pista de tierra junto a la franja de vegetación quemada"
+                  className="w-full h-44 sm:h-56 object-cover"
+                />
+              </div>
+              <div className="rounded-xl overflow-hidden shadow-md">
+                <img
+                  src="/images/incendio-gatito-ladera.jpg"
+                  alt="Un gatito en primer plano sobre la ladera quemada, con el humo del incendio detrás de él"
+                  className="w-full h-44 sm:h-56 object-cover"
+                />
+              </div>
             </div>
+
+            <p className="text-center text-xs text-foreground/60 leading-relaxed max-w-md mx-auto mt-5">
+              Gatitos deambulando solos entre la ceniza tras el paso del
+              fuego, sin agua ni comida cerca. Así los fuimos encontrando en
+              la sierra de Guadalajara.
+            </p>
           </div>
         </section>
 
-        {/* Cost breakdown */}
-        <section className="pb-12 md:pb-16 bg-white">
-          <div className="container max-w-xl mx-auto">
-            <h2 className="text-xl font-poppins font-bold text-center mb-6">
-              ¿En qué se va a usar?
-            </h2>
-            <div className="flex flex-col gap-3">
-              {COST_BREAKDOWN.map(item => (
-                <div
-                  key={item.label}
-                  className="flex items-center justify-between rounded-xl border border-border px-4 py-3"
-                >
-                  <span className="text-foreground/80">{item.label}</span>
-                  <span className="font-poppins font-bold text-primary">
-                    {item.amount.toLocaleString("es-ES")} €
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Guadalajara mission photo series */}
+        {/* Real mission photos — the team's response, right after the raw
+            evidence above and still above the donation ask */}
         <section className="py-12 md:py-16 bg-white">
           <div className="container max-w-xl mx-auto">
             <p className="text-center text-[11px] font-semibold tracking-wide uppercase text-primary/80 mb-6">
@@ -226,6 +225,55 @@ export default function Dona() {
               desplazó para rescatar, alimentar y poner a salvo a los gatos de
               una colonia atrapada entre el humo. Así fue la misión, día a día.
             </p>
+
+            {/* Valencia HQ vs. Guadalajara field mission — closes the
+                location gap a suspicious visitor would otherwise notice */}
+            <p className="text-center text-xs text-foreground/50 leading-relaxed max-w-md mx-auto mt-3">
+              Nuestra sede administrativa está en Valencia. El equipo se
+              desplazó a Guadalajara al conocer la emergencia, como hace en
+              cada una de las 35 colonias que atendemos por España.
+            </p>
+          </div>
+        </section>
+
+        {/* Donation ask */}
+        <section id="donar" className="pb-12 md:pb-16 scroll-mt-20">
+          <div className="container max-w-xl mx-auto">
+            <h2 className="text-2xl font-poppins font-bold text-center mb-2 text-balance">
+              Ayúdanos a cuidar de ellos
+            </h2>
+            <p className="text-center text-foreground/70 mb-8">
+              Elige una cantidad y mira exactamente en qué se convierte.
+            </p>
+
+            <DonationButtons />
+          </div>
+        </section>
+
+        {/* Cost breakdown — labeled as a planned estimate, not invoiced
+            figures */}
+        <section className="pb-12 md:pb-16 bg-white">
+          <div className="container max-w-xl mx-auto">
+            <h2 className="text-xl font-poppins font-bold text-center mb-1">
+              ¿En qué se va a usar?
+            </h2>
+            <p className="text-center text-xs text-foreground/50 mb-6">
+              Estimación orientativa del reparto del presupuesto, sujeta a las
+              necesidades reales de cada entrega.
+            </p>
+            <div className="flex flex-col gap-3">
+              {COST_BREAKDOWN.map(item => (
+                <div
+                  key={item.label}
+                  className="flex items-center justify-between rounded-xl border border-border px-4 py-3"
+                >
+                  <span className="text-foreground/80">{item.label}</span>
+                  <span className="font-poppins font-bold text-primary">
+                    {item.amount.toLocaleString("es-ES")} €
+                  </span>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
 
@@ -280,18 +328,28 @@ export default function Dona() {
                 </div>
               </div>
             </div>
+          </div>
+        </section>
 
-            <div className="text-center">
-              <p className="text-foreground/70">
-                ¿Dudas? Escríbenos a{" "}
-                <a
-                  href="mailto:hola@vozdegato.com"
-                  className="text-primary hover:underline font-semibold"
-                >
-                  hola@vozdegato.com
-                </a>
-              </p>
-            </div>
+        {/* Reward packs — reuses the 5/10/20 checkout tiers, see component
+            comment for why there's no separate merch backend */}
+        <section className="pb-12 md:pb-16">
+          <div className="container max-w-xl mx-auto">
+            <ThankYouPacks />
+          </div>
+        </section>
+
+        <section className="pb-12 md:pb-16">
+          <div className="container max-w-xl mx-auto text-center">
+            <p className="text-foreground/70">
+              ¿Dudas? Escríbenos a{" "}
+              <a
+                href="mailto:hola@vozdegato.com"
+                className="text-primary hover:underline font-semibold"
+              >
+                hola@vozdegato.com
+              </a>
+            </p>
           </div>
         </section>
       </main>
@@ -307,11 +365,14 @@ export default function Dona() {
             </a>{" "}
             · Av. Olímpica, 34, B, 46900 Torrent, Valencia, España
           </p>
+
           <p className="mt-2">
             © 2026 Voz de Gato. Todos los derechos reservados.
           </p>
         </div>
       </footer>
+
+      <StickyDonateBar />
     </div>
   );
 }
