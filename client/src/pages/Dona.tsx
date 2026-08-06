@@ -298,7 +298,18 @@ export default function Dona() {
 
       <footer className="border-t border-border py-8">
         <div className="container text-center text-sm text-foreground/50">
-          © 2026 Voz de Gato. Todos los derechos reservados.
+          <p>
+            <a
+              href="tel:+34670351397"
+              className="hover:text-primary transition-colors"
+            >
+              +34 670 35 13 97
+            </a>{" "}
+            · Av. Olímpica, 34, B, 46900 Torrent, Valencia, España
+          </p>
+          <p className="mt-2">
+            © 2026 Voz de Gato. Todos los derechos reservados.
+          </p>
         </div>
       </footer>
     </div>
