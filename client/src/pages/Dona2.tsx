@@ -1,6 +1,7 @@
-import DonationTiers from "@/components/DonationTiers";
 import { Progress } from "@/components/ui/progress";
+import { trackEvent } from "@/lib/analytics";
 import { CheckCircle2 } from "lucide-react";
+import { useState } from "react";
 import { Link } from "wouter";
 
 /**
@@ -30,6 +31,99 @@ const RECENT_DONATIONS = [
   { initials: "J. L.", amount: 25, when: "hace 34 min" },
   { initials: "Anónimo", amount: 5, when: "hace 1 h" },
 ];
+
+const AMOUNTS = [5, 10, 20, 50, 100];
+
+// Illustrative equivalences, not a real per-kg/per-service cost calculation —
+// same status as COST_BREAKDOWN above. Kept roughly proportional to the 10€ =
+// 15kg anchor so they don't look inconsistent next to each other.
+const IMPACT: Record<number, string> = {
+  5: "7 kg de comida para las colonias",
+  10: "15 kg de comida para las colonias",
+  20: "Agua limpia y contenedores para una colonia",
+  50: "Transporte y transportines para un rescate",
+  100: "Una revisión veterinaria de urgencia",
+};
+
+function FlatDonationButtons() {
+  const [pending, setPending] = useState<number | null>(null);
+  const [error, setError] = useState("");
+
+  const handleDonate = async (amount: number) => {
+    setPending(amount);
+    setError("");
+    trackEvent("begin_checkout", {
+      currency: "EUR",
+      value: amount,
+      items: [
+        { item_id: `tier_${amount}`, item_name: `${amount}€`, price: amount },
+      ],
+    });
+    try {
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ amount }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.url) {
+        setError(
+          data.error || "No hemos podido abrir el pago. Inténtalo de nuevo."
+        );
+        trackEvent("checkout_error", {
+          amount,
+          reason: data.error || "api_error",
+        });
+        setPending(null);
+        return;
+      }
+      window.location.href = data.url;
+    } catch {
+      setError(
+        "No hemos podido abrir el pago. Revisa tu conexión e inténtalo de nuevo."
+      );
+      trackEvent("checkout_error", { amount, reason: "network_error" });
+      setPending(null);
+    }
+  };
+
+  return (
+    <div>
+      <div className="grid grid-cols-3 sm:grid-cols-5 gap-3 mb-5">
+        {AMOUNTS.map(amount => (
+          <button
+            key={amount}
+            type="button"
+            disabled={pending !== null}
+            onClick={() => handleDonate(amount)}
+            className="rounded-xl border-2 border-primary/30 hover:border-primary hover:bg-primary/5 transition-colors py-4 px-2 text-center disabled:opacity-60"
+          >
+            <span className="block text-xl sm:text-2xl font-poppins font-bold text-primary">
+              {pending === amount ? "…" : `${amount}€`}
+            </span>
+            <span className="block text-xs text-foreground/60 leading-snug mt-1">
+              {IMPACT[amount]}
+            </span>
+          </button>
+        ))}
+      </div>
+
+      {error && (
+        <p
+          className="text-center text-destructive font-medium mb-5"
+          role="alert"
+        >
+          {error}
+        </p>
+      )}
+
+      <p className="text-center text-sm text-foreground/60">
+        Pago seguro con tarjeta o Bizum a través de Stripe. Si tu aportación
+        lleva recompensa, te pedimos la dirección de envío durante el pago.
+      </p>
+    </div>
+  );
+}
 
 export default function Dona2() {
   return (
@@ -131,11 +225,10 @@ export default function Dona2() {
               Ayúdanos a cuidar de ellos
             </h2>
             <p className="text-center text-foreground/70 mb-8">
-              Elige una cantidad. Algunas incluyen un pequeño detalle de
-              agradecimiento — lo verás al abrir cada opción.
+              Elige una cantidad y mira exactamente en qué se convierte.
             </p>
 
-            <DonationTiers />
+            <FlatDonationButtons />
           </div>
         </section>
 
@@ -195,43 +288,29 @@ export default function Dona2() {
             <div className="grid grid-cols-2 gap-3">
               <div className="col-span-2 rounded-xl overflow-hidden shadow-md">
                 <img
-                  src="/images/mision-guadalajara-equipo.jpg"
-                  alt="El equipo de Voz de Gato posa con los gatos rescatados durante la misión de emergencia en la sierra de Guadalajara, con el humo del incendio al fondo"
+                  src="/images/mision-guadalajara-real-equipo.jpg"
+                  alt="El equipo de Voz de Gato posa junto a los transportines con los gatos rescatados, con el incendio activo en las colinas al fondo"
                   className="w-full h-56 sm:h-72 object-cover"
                 />
               </div>
               <div className="rounded-xl overflow-hidden shadow-md">
                 <img
-                  src="/images/mision-guadalajara-alimentando.jpg"
-                  alt="Voluntaria de Voz de Gato dando de comer a un gato junto a los transportines, con otro gato observando entre la ceniza"
-                  className="w-full h-36 sm:h-44 object-cover"
+                  src="/images/mision-guadalajara-real-alimentando-1.jpg"
+                  alt="Voluntaria de Voz de Gato agachada dando de comer a tres gatos de la colonia en la ladera quemada, junto a los transportines"
+                  className="w-full h-44 sm:h-56 object-cover"
                 />
               </div>
               <div className="rounded-xl overflow-hidden shadow-md">
                 <img
-                  src="/images/mision-guadalajara-manta.jpg"
-                  alt="Voluntaria sujetando a un gato rescatado envuelto en una manta, con dos gatos más cerca en la ladera quemada"
-                  className="w-full h-36 sm:h-44 object-cover"
-                />
-              </div>
-              <div className="rounded-xl overflow-hidden shadow-md">
-                <img
-                  src="/images/mision-guadalajara-transporte.jpg"
-                  alt="Voluntario caminando con un transportín y una manta entre los gatos de la colonia, en la zona afectada por el incendio"
-                  className="w-full h-36 sm:h-44 object-cover"
-                />
-              </div>
-              <div className="rounded-xl overflow-hidden shadow-md">
-                <img
-                  src="/images/mision-guadalajara-colonia.jpg"
-                  alt="Voluntaria dando de comer y de beber a varios gatos de la colonia en la ladera quemada de la sierra de Guadalajara"
-                  className="w-full h-36 sm:h-44 object-cover"
+                  src="/images/mision-guadalajara-real-alimentando-2.jpg"
+                  alt="Voluntaria dando de comer a un gato mientras otro gato blanco y negro observa a lo lejos entre la ceniza"
+                  className="w-full h-44 sm:h-56 object-cover"
                 />
               </div>
               <div className="col-span-2 rounded-xl overflow-hidden shadow-md">
                 <img
-                  src="/images/mision-guadalajara-dos-gatos.jpg"
-                  alt="Dos gatos de la colonia observan la cámara con el incendio activo de fondo en la sierra de Guadalajara"
+                  src="/images/mision-guadalajara-real-transporte.jpg"
+                  alt="Voluntario caminando con un transportín y una manta entre los gatos de la colonia, en la zona afectada por el incendio"
                   className="w-full h-48 sm:h-60 object-cover"
                 />
               </div>
