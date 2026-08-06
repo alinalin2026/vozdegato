@@ -34,40 +34,18 @@ const RECENT_DONATIONS = [
 
 const AMOUNTS = [5, 10, 20, 50, 100];
 
-// 10€/20€ share the mug photo, 50€/100€ share the full-pack photo, per the
-// simplified messaging asked for — NOT the real per-tier reward list.
-// 50€/100€ have no physical reward on the backend today (shared/donaciones.ts
-// marks them non-physical, so checkout never collects a shipping address);
-// this preview promises one anyway. Needs a real backend tier change before
-// this page goes live, or the promise on screen won't be honoured.
-const REWARD_PREVIEW: Record<
-  number,
-  { image: string; alt: string; caption: string }
-> = {
-  10: {
-    image: "/images/tier-5-mug.jpg",
-    alt: "Taza exclusiva Voz de Gato",
-    caption: "Una taza exclusiva Voz de Gato, como agradecimiento.",
-  },
-  20: {
-    image: "/images/tier-5-mug.jpg",
-    alt: "Taza exclusiva Voz de Gato",
-    caption: "Una taza exclusiva Voz de Gato, como agradecimiento.",
-  },
-  50: {
-    image: "/images/tier-20-bundle.jpg",
-    alt: "Pack completo Voz de Gato: camiseta, bolsa de tela y taza",
-    caption: "El pack completo Voz de Gato: camiseta, bolsa y taza.",
-  },
-  100: {
-    image: "/images/tier-20-bundle.jpg",
-    alt: "Pack completo Voz de Gato: camiseta, bolsa de tela y taza",
-    caption: "El pack completo Voz de Gato: camiseta, bolsa y taza.",
-  },
+// Illustrative equivalences, not a real per-kg/per-service cost calculation —
+// same status as COST_BREAKDOWN above. Kept roughly proportional to the 10€ =
+// 15kg anchor so they don't look inconsistent next to each other.
+const IMPACT: Record<number, string> = {
+  5: "7 kg de comida para las colonias",
+  10: "15 kg de comida para las colonias",
+  20: "Agua limpia y contenedores para una colonia",
+  50: "Transporte y transportines para un rescate",
+  100: "Una revisión veterinaria de urgencia",
 };
 
 function FlatDonationButtons() {
-  const [selected, setSelected] = useState<number | null>(null);
   const [pending, setPending] = useState<number | null>(null);
   const [error, setError] = useState("");
 
@@ -109,22 +87,6 @@ function FlatDonationButtons() {
     }
   };
 
-  const handleSelect = (amount: number) => {
-    // 5€ has no reward to preview — straight to checkout.
-    if (!REWARD_PREVIEW[amount]) {
-      handleDonate(amount);
-      return;
-    }
-    trackEvent("select_item", {
-      items: [
-        { item_id: `tier_${amount}`, item_name: `${amount}€`, price: amount },
-      ],
-    });
-    setSelected(amount);
-  };
-
-  const preview = selected ? REWARD_PREVIEW[selected] : null;
-
   return (
     <div>
       <div className="grid grid-cols-3 sm:grid-cols-5 gap-3 mb-5">
@@ -133,41 +95,18 @@ function FlatDonationButtons() {
             key={amount}
             type="button"
             disabled={pending !== null}
-            onClick={() => handleSelect(amount)}
-            className={`rounded-xl border-2 py-4 text-center transition-colors disabled:opacity-60 ${
-              selected === amount
-                ? "border-primary bg-primary/5"
-                : "border-primary/30 hover:border-primary hover:bg-primary/5"
-            }`}
+            onClick={() => handleDonate(amount)}
+            className="rounded-xl border-2 border-primary/30 hover:border-primary hover:bg-primary/5 transition-colors py-4 px-2 text-center disabled:opacity-60"
           >
             <span className="block text-xl sm:text-2xl font-poppins font-bold text-primary">
               {pending === amount ? "…" : `${amount}€`}
             </span>
+            <span className="block text-xs text-foreground/60 leading-snug mt-1">
+              {IMPACT[amount]}
+            </span>
           </button>
         ))}
       </div>
-
-      {preview && (
-        <div className="rounded-2xl border border-border overflow-hidden mb-5">
-          <img
-            src={preview.image}
-            alt={preview.alt}
-            className="w-full h-48 object-cover"
-          />
-          <div className="p-4 text-center">
-            <p className="font-semibold mb-3">Vas a recibir esto:</p>
-            <p className="text-foreground/70 mb-4">{preview.caption}</p>
-            <button
-              type="button"
-              disabled={pending !== null}
-              onClick={() => handleDonate(selected!)}
-              className="w-full rounded-xl bg-primary text-primary-foreground font-poppins font-bold py-3 disabled:opacity-60"
-            >
-              {pending === selected ? "…" : `Continuar con ${selected}€`}
-            </button>
-          </div>
-        </div>
-      )}
 
       {error && (
         <p
@@ -286,8 +225,7 @@ export default function Dona2() {
               Ayúdanos a cuidar de ellos
             </h2>
             <p className="text-center text-foreground/70 mb-8">
-              Elige una cantidad. Algunas incluyen un pequeño detalle de
-              agradecimiento — te lo enseñamos antes de pagar.
+              Elige una cantidad y mira exactamente en qué se convierte.
             </p>
 
             <FlatDonationButtons />
