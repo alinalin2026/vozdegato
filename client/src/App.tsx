@@ -6,7 +6,6 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import DonacionCompletada from "./pages/DonacionCompletada";
 import Dona from "./pages/Dona";
-import Dona2 from "./pages/Dona2";
 import Gracias from "./pages/Gracias";
 import Home from "./pages/Home";
 import Peticion from "./pages/Peticion";
@@ -18,7 +17,6 @@ function Router() {
       <Route path={"/peticion"} component={Peticion} />
       <Route path={"/gracias"} component={Gracias} />
       <Route path={"/dona"} component={Dona} />
-      <Route path={"/dona2"} component={Dona2} />
       <Route path={"/donacion-completada"} component={DonacionCompletada} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}

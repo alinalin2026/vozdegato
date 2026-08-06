@@ -21,14 +21,21 @@ const SHARE_GENERIC = {
 
 type Status =
   | { state: "loading" }
-  | { state: "ok"; amount: number | null; monthly: boolean; label: string | null }
+  | {
+      state: "ok";
+      amount: number | null;
+      monthly: boolean;
+      label: string | null;
+    }
   | { state: "unknown" };
 
 export default function DonacionCompletada() {
   const [status, setStatus] = useState<Status>({ state: "loading" });
   const [pending, setPending] = useState<number | null>(null);
   const [error, setError] = useState("");
-  const [isSigner] = useState(() => Boolean(sessionStorage.getItem(SIGNER_NAME_KEY)));
+  const [isSigner] = useState(() =>
+    Boolean(sessionStorage.getItem(SIGNER_NAME_KEY))
+  );
 
   useEffect(() => {
     const id = new URLSearchParams(window.location.search).get("session_id");
@@ -37,8 +44,8 @@ export default function DonacionCompletada() {
       return;
     }
     fetch(`/api/checkout?session_id=${encodeURIComponent(id)}`)
-      .then((r) => (r.ok ? r.json() : null))
-      .then((data) => {
+      .then(r => (r.ok ? r.json() : null))
+      .then(data => {
         if (data?.paid) {
           const monthly = data.mode === "subscription";
           setStatus({
@@ -53,8 +60,11 @@ export default function DonacionCompletada() {
             value: data.amount ?? undefined,
             items: [
               {
-                item_id: monthly ? "socio_mensual" : `tier_${data.amount ?? "custom"}`,
-                item_name: data.label ?? (monthly ? "Socio/a mensual" : "Donación"),
+                item_id: monthly
+                  ? "socio_mensual"
+                  : `tier_${data.amount ?? "custom"}`,
+                item_name:
+                  data.label ?? (monthly ? "Socio/a mensual" : "Donación"),
                 price: data.amount ?? undefined,
               },
             ],
@@ -72,7 +82,13 @@ export default function DonacionCompletada() {
     trackEvent("begin_checkout", {
       currency: "EUR",
       value: amount,
-      items: [{ item_id: "socio_mensual", item_name: `Socio/a — ${amount}€/mes`, price: amount }],
+      items: [
+        {
+          item_id: "socio_mensual",
+          item_name: `Socio/a — ${amount}€/mes`,
+          price: amount,
+        },
+      ],
     });
     try {
       const res = await fetch("/api/checkout", {
@@ -82,15 +98,27 @@ export default function DonacionCompletada() {
       });
       const data = await res.json();
       if (!res.ok || !data.url) {
-        setError(data.error || "No hemos podido abrir el pago. Inténtalo de nuevo.");
-        trackEvent("checkout_error", { amount, mode: "subscription", reason: data.error || "api_error" });
+        setError(
+          data.error || "No hemos podido abrir el pago. Inténtalo de nuevo."
+        );
+        trackEvent("checkout_error", {
+          amount,
+          mode: "subscription",
+          reason: data.error || "api_error",
+        });
         setPending(null);
         return;
       }
       window.location.href = data.url;
     } catch {
-      setError("No hemos podido abrir el pago. Revisa tu conexión e inténtalo de nuevo.");
-      trackEvent("checkout_error", { amount, mode: "subscription", reason: "network_error" });
+      setError(
+        "No hemos podido abrir el pago. Revisa tu conexión e inténtalo de nuevo."
+      );
+      trackEvent("checkout_error", {
+        amount,
+        mode: "subscription",
+        reason: "network_error",
+      });
       setPending(null);
     }
   };
@@ -116,8 +144,14 @@ export default function DonacionCompletada() {
       <header className="bg-white border-b border-border">
         <div className="container flex items-center py-3">
           <Link href="/" className="flex items-center gap-2">
-            <img src="/images/logo-mark.png" alt="" className="h-8 w-8 object-contain" />
-            <span className="font-poppins font-bold text-primary">Voz de Gato</span>
+            <img
+              src="/images/logo-mark.png"
+              alt=""
+              className="h-8 w-8 object-contain"
+            />
+            <span className="font-poppins font-bold text-primary">
+              Voz de Gato
+            </span>
           </Link>
         </div>
       </header>
@@ -129,7 +163,9 @@ export default function DonacionCompletada() {
           </div>
 
           {status.state === "loading" && (
-            <p className="text-lg text-foreground/60">Confirmando tu donación…</p>
+            <p className="text-lg text-foreground/60">
+              Confirmando tu donación…
+            </p>
           )}
 
           {status.state === "ok" && (
@@ -141,15 +177,14 @@ export default function DonacionCompletada() {
                 {alreadyMonthly ? (
                   <>
                     Desde hoy nos ayudas cada mes
-                    {status.amount ? ` con ${status.amount}€` : ""}. Te hemos enviado el recibo por
-                    correo.
+                    {status.amount ? ` con ${status.amount}€` : ""}. Te hemos
+                    enviado el recibo por correo.
                   </>
                 ) : (
                   <>
                     Gracias de verdad
-                    {status.amount ? ` por tus ${status.amount}€` : ""}. Te hemos enviado el recibo
-                    por correo
-                    {status.label ? `, y tu ${status.label.toLowerCase()} va de camino` : ""}.
+                    {status.amount ? ` por tus ${status.amount}€` : ""}. Te
+                    hemos enviado el recibo por correo.
                   </>
                 )}
               </p>
@@ -162,8 +197,8 @@ export default function DonacionCompletada() {
                 Gracias por tu apoyo
               </h1>
               <p className="text-lg text-foreground/70 leading-relaxed">
-                Si acabas de completar una donación, recibirás el recibo por correo en unos minutos.
-                ¿Algún problema? Escríbenos a{" "}
+                Si acabas de completar una donación, recibirás el recibo por
+                correo en unos minutos. ¿Algún problema? Escríbenos a{" "}
                 <a
                   href="mailto:hola@vozdegato.com"
                   className="text-primary hover:underline font-semibold"
@@ -183,13 +218,13 @@ export default function DonacionCompletada() {
               ¿Nos echas una mano cada mes?
             </h2>
             <p className="text-foreground/70 leading-relaxed mb-5">
-              Las colonias comen todos los días, no solo cuando hay campaña. Con una cuota mensual
-              podemos planificar de verdad: comida, vacunas y esterilizaciones. Puedes cancelarla
-              cuando quieras.
+              Las colonias comen todos los días, no solo cuando hay campaña. Con
+              una cuota mensual podemos planificar de verdad: comida, vacunas y
+              esterilizaciones. Puedes cancelarla cuando quieras.
             </p>
 
             <div className="grid grid-cols-3 gap-3 mb-4">
-              {MONTHLY_AMOUNTS.map((amount) => (
+              {MONTHLY_AMOUNTS.map(amount => (
                 <button
                   key={amount}
                   type="button"
@@ -200,7 +235,9 @@ export default function DonacionCompletada() {
                   <span className="block text-2xl font-poppins font-bold text-primary">
                     {pending === amount ? "…" : `${amount}€`}
                   </span>
-                  <span className="block text-xs font-semibold text-foreground/60">al mes</span>
+                  <span className="block text-xs font-semibold text-foreground/60">
+                    al mes
+                  </span>
                 </button>
               ))}
             </div>
@@ -212,8 +249,12 @@ export default function DonacionCompletada() {
             )}
 
             <p className="text-sm text-foreground/60 flex items-start gap-2">
-              <Check className="w-4 h-4 flex-shrink-0 mt-0.5 text-primary" strokeWidth={3} />
-              Sin permanencia. Cancelas cuando quieras desde el correo del recibo.
+              <Check
+                className="w-4 h-4 flex-shrink-0 mt-0.5 text-primary"
+                strokeWidth={3}
+              />
+              Sin permanencia. Cancelas cuando quieras desde el correo del
+              recibo.
             </p>
           </div>
         )}
@@ -221,7 +262,11 @@ export default function DonacionCompletada() {
         {/* Last step: turn a donor into a megaphone */}
         {status.state === "ok" && (
           <div className="text-center mt-10 bg-white rounded-2xl border border-border p-6 sm:p-8">
-            <img src="/images/logo-mark.png" alt="" className="h-12 w-12 object-contain mx-auto mb-4" />
+            <img
+              src="/images/logo-mark.png"
+              alt=""
+              className="h-12 w-12 object-contain mx-auto mb-4"
+            />
             <h2 className="text-xl sm:text-2xl font-poppins font-bold mb-2 text-balance">
               Sé la voz de los gatos en redes
             </h2>

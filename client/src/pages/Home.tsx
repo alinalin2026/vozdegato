@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import DonationBanner from "@/components/DonationBanner";
-import DonationTiers from "@/components/DonationTiers";
+import DonationButtons from "@/components/DonationButtons";
 import { trackEvent } from "@/lib/analytics";
 import { Mail, MapPin, Phone, Shield, Utensils, Heart } from "lucide-react";
 import { useState } from "react";
@@ -422,7 +422,7 @@ export default function Home() {
           <p className="text-lg text-foreground/70 text-center mb-10">
             Ya conoces al equipo. Esto es lo que tu ayuda hace posible.
           </p>
-          <DonationTiers />
+          <DonationButtons />
         </div>
       </section>
 
