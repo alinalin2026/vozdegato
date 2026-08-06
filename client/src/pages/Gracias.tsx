@@ -1,4 +1,4 @@
-import DonationTiers from "@/components/DonationTiers";
+import DonationButtons from "@/components/DonationButtons";
 import { Button } from "@/components/ui/button";
 import { Check } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -21,8 +21,14 @@ export default function Gracias() {
       <header className="bg-white border-b border-border">
         <div className="container flex items-center py-3">
           <Link href="/" className="flex items-center gap-2">
-            <img src="/images/logo-mark.png" alt="" className="h-8 w-8 object-contain" />
-            <span className="font-poppins font-bold text-primary">Voz de Gato</span>
+            <img
+              src="/images/logo-mark.png"
+              alt=""
+              className="h-8 w-8 object-contain"
+            />
+            <span className="font-poppins font-bold text-primary">
+              Voz de Gato
+            </span>
           </Link>
         </div>
       </header>
@@ -44,17 +50,20 @@ export default function Gracias() {
 
         {/* The ask, right here on the first screen */}
         <p className="text-center text-foreground/70 mb-4">
-          Elige una cantidad y te enviamos un detalle nuestro para agradecértelo.
+          Elige una cantidad y mira exactamente en qué se convierte.
         </p>
-        <DonationTiers />
+        <DonationButtons />
 
         {/* Context, now below the ask */}
         <div className="flex flex-col gap-8 text-center mt-14">
           <p className="text-foreground/70 leading-relaxed">
             En toda España ya hay{" "}
-            <strong className="text-primary font-poppins">más de 20.000 firmas</strong> pidiendo un
-            protocolo de rescate animal en catástrofes. La tuya suma. Cuando reunamos las
-            suficientes, llevamos la petición donde tiene que llegar.
+            <strong className="text-primary font-poppins">
+              más de 20.000 firmas
+            </strong>{" "}
+            pidiendo un protocolo de rescate animal en catástrofes. La tuya
+            suma. Cuando reunamos las suficientes, llevamos la petición donde
+            tiene que llegar.
           </p>
 
           <div className="bg-white rounded-2xl border border-border p-6 sm:p-8 text-left">
@@ -63,26 +72,36 @@ export default function Gracias() {
             </h2>
             <div className="flex flex-col gap-5">
               <div>
-                <h3 className="font-poppins font-bold mb-1">Trabajo diario, no promesas</h3>
+                <h3 className="font-poppins font-bold mb-1">
+                  Trabajo diario, no promesas
+                </h3>
                 <p className="text-foreground/70 leading-relaxed">
-                  Cuidamos colonias en 35 puntos de España. Comida y agua cada día, llueva o haga
-                  sol.
+                  Cuidamos colonias en 35 puntos de España. Comida y agua cada
+                  día, llueva o haga sol.
                 </p>
               </div>
               <div>
-                <h3 className="font-poppins font-bold mb-1">Gente que da la cara</h3>
+                <h3 className="font-poppins font-bold mb-1">
+                  Gente que da la cara
+                </h3>
                 <p className="text-foreground/70 leading-relaxed">
                   Somos siete personas con nombre y apellidos.{" "}
-                  <Link href="/#equipo" className="text-primary hover:underline font-semibold">
+                  <Link
+                    href="/#equipo"
+                    className="text-primary hover:underline font-semibold"
+                  >
                     Conoce al equipo
                   </Link>
                   .
                 </p>
               </div>
               <div>
-                <h3 className="font-poppins font-bold mb-1">Te contamos en qué se usa</h3>
+                <h3 className="font-poppins font-bold mb-1">
+                  Te contamos en qué se usa
+                </h3>
                 <p className="text-foreground/70 leading-relaxed">
-                  Si donas, te escribimos para contarte a dónde ha ido tu aportación.
+                  Si donas, te escribimos para contarte a dónde ha ido tu
+                  aportación.
                 </p>
               </div>
             </div>

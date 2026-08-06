@@ -94,14 +94,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             },
           },
         ],
-        // Only ask for an address when something actually gets posted.
-        ...(tier?.physical
-          ? {
-              shipping_address_collection: {
-                allowed_countries: ["ES" as const],
-              },
-            }
-          : {}),
         metadata: { label },
         success_url: `${origin}/donacion-completada?session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${origin}/gracias`,
