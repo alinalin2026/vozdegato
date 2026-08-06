@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
-import PeticionBanner from "@/components/PeticionBanner";
+import DonationBanner from "@/components/DonationBanner";
+import DonationTiers from "@/components/DonationTiers";
 import { trackEvent } from "@/lib/analytics";
 import { Mail, MapPin, Phone, Shield, Utensils, Heart } from "lucide-react";
 import { useState } from "react";
@@ -31,9 +32,11 @@ export default function Home() {
     message: "",
   });
 
-  const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleFormChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleFormSubmit = (e: React.FormEvent) => {
@@ -42,7 +45,9 @@ export default function Home() {
       toast.error("Nos falta algún dato: revisa el formulario, por favor");
       return;
     }
-    toast.success("¡Gracias! Ya tenemos tu mensaje y te contestamos en cuanto podamos.");
+    toast.success(
+      "¡Gracias! Ya tenemos tu mensaje y te contestamos en cuanto podamos."
+    );
     trackEvent("contact_form_submit");
     setFormData({ name: "", email: "", message: "" });
   };
@@ -59,26 +64,47 @@ export default function Home() {
               className="h-12 w-12 object-contain flex-shrink-0"
             />
             <div>
-              <h1 className="text-xl font-poppins font-bold text-primary">Voz de Gato</h1>
-              <p className="text-xs text-muted-foreground">Hablamos por ellos</p>
+              <h1 className="text-xl font-poppins font-bold text-primary">
+                Voz de Gato
+              </h1>
+              <p className="text-xs text-muted-foreground">
+                Hablamos por ellos
+              </p>
             </div>
           </div>
           <nav className="hidden lg:flex items-center gap-6">
-            <a href="#mision" className="text-foreground hover:text-primary transition-colors font-medium">
+            <a
+              href="#mision"
+              className="text-foreground hover:text-primary transition-colors font-medium"
+            >
               Misión
             </a>
-            <a href="#nosotros" className="text-foreground hover:text-primary transition-colors font-medium">
+            <a
+              href="#nosotros"
+              className="text-foreground hover:text-primary transition-colors font-medium"
+            >
               Sobre Nosotros
             </a>
-            <a href="#equipo" className="text-foreground hover:text-primary transition-colors font-medium">
+            <a
+              href="#equipo"
+              className="text-foreground hover:text-primary transition-colors font-medium"
+            >
               Equipo
             </a>
-            <a href="#contacto" className="text-foreground hover:text-primary transition-colors font-medium">
+            <a
+              href="#contacto"
+              className="text-foreground hover:text-primary transition-colors font-medium"
+            >
               Contacto
             </a>
             <Link
               href="/peticion"
-              onClick={() => trackEvent("cta_click", { location: "header_nav", label: "Firma la petición" })}
+              onClick={() =>
+                trackEvent("cta_click", {
+                  location: "header_nav",
+                  label: "Firma la petición",
+                })
+              }
               className="bg-primary/10 text-primary hover:bg-primary/20 transition-colors font-semibold px-3.5 py-1.5 rounded-full whitespace-nowrap"
             >
               Firma la petición
@@ -96,15 +122,22 @@ export default function Home() {
               Los gatos no pueden hablar. Nosotros hablamos por ellos.
             </h1>
             <p className="text-xl text-foreground/80 leading-relaxed">
-              Desde 2024 rescatamos gatos en peligro, los esterilizamos, los curamos y no paramos hasta encontrarles un hogar de verdad. Voz de Gato existe para que ningún gato se quede solo.
+              Desde 2024 rescatamos gatos en peligro, los esterilizamos, los
+              curamos y no paramos hasta encontrarles un hogar de verdad. Voz de
+              Gato existe para que ningún gato se quede solo.
             </p>
             <div className="flex gap-4 pt-4">
               <Button
                 size="lg"
                 className="bg-primary hover:bg-primary/90 text-white font-semibold"
                 onClick={() => {
-                  trackEvent("cta_click", { location: "hero_primary", label: "Únete a Nuestra Misión" });
-                  document.getElementById("contacto")?.scrollIntoView({ behavior: "smooth" });
+                  trackEvent("cta_click", {
+                    location: "hero_primary",
+                    label: "Únete a Nuestra Misión",
+                  });
+                  document
+                    .getElementById("contacto")
+                    ?.scrollIntoView({ behavior: "smooth" });
                 }}
               >
                 Únete a Nuestra Misión
@@ -114,8 +147,13 @@ export default function Home() {
                 variant="outline"
                 className="border-primary text-primary hover:bg-primary/10"
                 onClick={() => {
-                  trackEvent("cta_click", { location: "hero_secondary", label: "Conócenos" });
-                  document.getElementById("nosotros")?.scrollIntoView({ behavior: "smooth" });
+                  trackEvent("cta_click", {
+                    location: "hero_secondary",
+                    label: "Conócenos",
+                  });
+                  document
+                    .getElementById("nosotros")
+                    ?.scrollIntoView({ behavior: "smooth" });
                 }}
               >
                 Conócenos
@@ -148,9 +186,12 @@ export default function Home() {
               <div className="flex justify-center">
                 <Shield className="w-16 h-16 text-primary" />
               </div>
-              <h3 className="text-2xl font-poppins font-bold text-foreground">Protección</h3>
+              <h3 className="text-2xl font-poppins font-bold text-foreground">
+                Protección
+              </h3>
               <p className="text-lg text-foreground/70">
-                Sacamos a los gatos de la calle y del peligro, y no los soltamos de la mano hasta que están a salvo.
+                Sacamos a los gatos de la calle y del peligro, y no los soltamos
+                de la mano hasta que están a salvo.
               </p>
             </div>
 
@@ -159,9 +200,12 @@ export default function Home() {
               <div className="flex justify-center">
                 <Utensils className="w-16 h-16 text-primary" />
               </div>
-              <h3 className="text-2xl font-poppins font-bold text-foreground">Alimentación</h3>
+              <h3 className="text-2xl font-poppins font-bold text-foreground">
+                Alimentación
+              </h3>
               <p className="text-lg text-foreground/70">
-                Cada colonia que cuidamos tiene comida fresca y agua limpia todos los días, llueva o haga sol.
+                Cada colonia que cuidamos tiene comida fresca y agua limpia
+                todos los días, llueva o haga sol.
               </p>
             </div>
 
@@ -170,16 +214,21 @@ export default function Home() {
               <div className="flex justify-center">
                 <Heart className="w-16 h-16 text-primary" />
               </div>
-              <h3 className="text-2xl font-poppins font-bold text-foreground">Amor</h3>
+              <h3 className="text-2xl font-poppins font-bold text-foreground">
+                Amor
+              </h3>
               <p className="text-lg text-foreground/70">
-                Un gato que lo ha pasado mal necesita algo más que comida: necesita volver a confiar en alguien.
+                Un gato que lo ha pasado mal necesita algo más que comida:
+                necesita volver a confiar en alguien.
               </p>
             </div>
           </div>
 
           <div className="bg-primary/10 border-l-4 border-primary p-8 rounded-lg">
             <p className="text-xl text-foreground leading-relaxed">
-              Empezamos en 2024 siendo cuatro personas con muchas ganas y pocos recursos. Hoy seguimos haciendo lo mismo de entonces: estar ahí, cada día, para los gatos que nadie más ve.
+              Empezamos en 2024 siendo cuatro personas con muchas ganas y pocos
+              recursos. Hoy seguimos haciendo lo mismo de entonces: estar ahí,
+              cada día, para los gatos que nadie más ve.
             </p>
           </div>
         </div>
@@ -202,7 +251,8 @@ export default function Home() {
           </div>
 
           <p className="text-lg text-foreground/70 mt-12 max-w-2xl mx-auto">
-            Comida, agua limpia y una visita diaria, haga frío o calor. Así es el trabajo real, todos los días del año.
+            Comida, agua limpia y una visita diaria, haga frío o calor. Así es
+            el trabajo real, todos los días del año.
           </p>
         </div>
       </section>
@@ -217,9 +267,13 @@ export default function Home() {
               className="w-full h-auto object-cover"
             />
             <div className="p-8">
-              <p className="text-3xl font-poppins font-bold text-primary mb-2">35 ubicaciones</p>
+              <p className="text-3xl font-poppins font-bold text-primary mb-2">
+                35 ubicaciones
+              </p>
               <p className="text-lg text-foreground/70">
-                Ahora mismo cuidamos colonias en 35 puntos repartidos por toda España. Detrás de cada punto del mapa hay gatos con nombre y personas que van a verlos cada semana.
+                Ahora mismo cuidamos colonias en 35 puntos repartidos por toda
+                España. Detrás de cada punto del mapa hay gatos con nombre y
+                personas que van a verlos cada semana.
               </p>
             </div>
           </div>
@@ -235,31 +289,53 @@ export default function Home() {
 
           <div className="space-y-8 text-lg text-foreground/80 leading-relaxed">
             <p>
-              Voz de Gato es una protectora de gatos. Nada de despachos ni de grandes discursos: somos un grupo de voluntarios y profesionales que un día decidimos que no podíamos mirar para otro lado.
+              Voz de Gato es una protectora de gatos. Nada de despachos ni de
+              grandes discursos: somos un grupo de voluntarios y profesionales
+              que un día decidimos que no podíamos mirar para otro lado.
             </p>
 
             <p>
-              Rescatamos gatos en situación de riesgo, los esterilizamos, los llevamos al veterinario cuando lo necesitan y buscamos familias responsables dispuestas a adoptarlos. Ninguno de los que pasa por nuestras manos se queda sin nombre ni sin alguien que le pregunte cómo está.
+              Rescatamos gatos en situación de riesgo, los esterilizamos, los
+              llevamos al veterinario cuando lo necesitan y buscamos familias
+              responsables dispuestas a adoptarlos. Ninguno de los que pasa por
+              nuestras manos se queda sin nombre ni sin alguien que le pregunte
+              cómo está.
             </p>
 
             <p>
-              Para nosotros un gato no es un objeto ni un capricho: es un ser que siente y que sufre. Por eso somos su voz, la de quienes no pueden hablar por sí mismos.
+              Para nosotros un gato no es un objeto ni un capricho: es un ser
+              que siente y que sufre. Por eso somos su voz, la de quienes no
+              pueden hablar por sí mismos.
             </p>
 
             <div className="bg-primary/5 p-8 rounded-lg border border-primary/20">
-              <h3 className="text-2xl font-poppins font-bold text-foreground mb-4">Nuestros Valores</h3>
+              <h3 className="text-2xl font-poppins font-bold text-foreground mb-4">
+                Nuestros Valores
+              </h3>
               <ul className="space-y-3">
                 <li className="flex gap-3">
                   <span className="text-primary font-bold">•</span>
-                  <span><strong>Compasión:</strong> cada gato que llega ha pasado por algo difícil, y lo tratamos con la paciencia que necesita, sin prisa.</span>
+                  <span>
+                    <strong>Compasión:</strong> cada gato que llega ha pasado
+                    por algo difícil, y lo tratamos con la paciencia que
+                    necesita, sin prisa.
+                  </span>
                 </li>
                 <li className="flex gap-3">
                   <span className="text-primary font-bold">•</span>
-                  <span><strong>Transparencia:</strong> contamos lo que hacemos bien y también lo que nos cuesta. No prometemos milagros, prometemos esfuerzo.</span>
+                  <span>
+                    <strong>Transparencia:</strong> contamos lo que hacemos bien
+                    y también lo que nos cuesta. No prometemos milagros,
+                    prometemos esfuerzo.
+                  </span>
                 </li>
                 <li className="flex gap-3">
                   <span className="text-primary font-bold">•</span>
-                  <span><strong>Constancia:</strong> no nos conformamos con un rescate puntual, trabajamos para que el cambio dure, colonia a colonia.</span>
+                  <span>
+                    <strong>Constancia:</strong> no nos conformamos con un
+                    rescate puntual, trabajamos para que el cambio dure, colonia
+                    a colonia.
+                  </span>
                 </li>
               </ul>
             </div>
@@ -286,16 +362,22 @@ export default function Home() {
           </div>
 
           <p className="text-lg text-foreground/80 leading-relaxed text-center max-w-2xl mx-auto mb-12">
-            Detrás de cada rescate, de cada colonia cuidada y de cada ronroneo recuperado hay un equipo humano entregado. Ellos son las manos que alimentan y los corazones que escuchan.
+            Detrás de cada rescate, de cada colonia cuidada y de cada ronroneo
+            recuperado hay un equipo humano entregado. Ellos son las manos que
+            alimentan y los corazones que escuchan.
           </p>
 
           <div className="grid md:grid-cols-2 gap-8 mb-12">
             <div className="bg-primary/5 p-8 rounded-lg border border-primary/20">
-              <h3 className="text-xl font-poppins font-bold text-foreground mb-5">Dirección</h3>
+              <h3 className="text-xl font-poppins font-bold text-foreground mb-5">
+                Dirección
+              </h3>
               <ul className="space-y-4">
-                {TEAM_LEADERSHIP.map((person) => (
+                {TEAM_LEADERSHIP.map(person => (
                   <li key={person.name}>
-                    <p className="text-lg font-semibold text-foreground">{person.name}</p>
+                    <p className="text-lg font-semibold text-foreground">
+                      {person.name}
+                    </p>
                     <p className="text-foreground/70">{person.role}</p>
                   </li>
                 ))}
@@ -303,23 +385,44 @@ export default function Home() {
             </div>
 
             <div className="bg-primary/5 p-8 rounded-lg border border-primary/20">
-              <h3 className="text-xl font-poppins font-bold text-foreground mb-5">Equipo de cuidado diario</h3>
+              <h3 className="text-xl font-poppins font-bold text-foreground mb-5">
+                Equipo de cuidado diario
+              </h3>
               <ul className="flex flex-wrap gap-x-6 gap-y-3">
-                {TEAM_MEMBERS.map((name) => (
-                  <li key={name} className="text-lg font-semibold text-foreground">
+                {TEAM_MEMBERS.map(name => (
+                  <li
+                    key={name}
+                    className="text-lg font-semibold text-foreground"
+                  >
                     {name}
                   </li>
                 ))}
               </ul>
               <p className="text-foreground/70 mt-4">
-                Se ocupan cada día de las 35 colonias: comida, agua limpia, revisiones y mucho cariño.
+                Se ocupan cada día de las 35 colonias: comida, agua limpia,
+                revisiones y mucho cariño.
               </p>
             </div>
           </div>
 
           <p className="text-lg text-foreground/80 leading-relaxed text-center max-w-2xl mx-auto">
-            Siete personas, una misma misión: ser, día tras día, la Voz de Gato. Porque ellos no pueden hablar, pero nosotros hablamos por ellos.
+            Siete personas, una misma misión: ser, día tras día, la Voz de Gato.
+            Porque ellos no pueden hablar, pero nosotros hablamos por ellos.
           </p>
+        </div>
+      </section>
+
+      {/* Donate — lets someone who left /dona to check the team come back
+          without navigating away again */}
+      <section className="py-16 md:py-20 bg-primary/5">
+        <div className="container max-w-xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-poppins font-bold text-center text-foreground mb-3">
+            ¿Les ayudamos?
+          </h2>
+          <p className="text-lg text-foreground/70 text-center mb-10">
+            Ya conoces al equipo. Esto es lo que tu ayuda hace posible.
+          </p>
+          <DonationTiers />
         </div>
       </section>
 
@@ -336,8 +439,13 @@ export default function Home() {
               <div className="flex gap-4">
                 <Mail className="w-8 h-8 text-primary flex-shrink-0 mt-1" />
                 <div>
-                  <h3 className="text-xl font-poppins font-bold text-foreground mb-2">Email</h3>
-                  <a href="mailto:hola@vozdegato.com" className="text-lg text-primary hover:underline">
+                  <h3 className="text-xl font-poppins font-bold text-foreground mb-2">
+                    Email
+                  </h3>
+                  <a
+                    href="mailto:hola@vozdegato.com"
+                    className="text-lg text-primary hover:underline"
+                  >
                     hola@vozdegato.com
                   </a>
                 </div>
@@ -346,8 +454,13 @@ export default function Home() {
               <div className="flex gap-4">
                 <Phone className="w-8 h-8 text-primary flex-shrink-0 mt-1" />
                 <div>
-                  <h3 className="text-xl font-poppins font-bold text-foreground mb-2">Teléfono</h3>
-                  <a href="tel:+34670351397" className="text-lg text-primary hover:underline">
+                  <h3 className="text-xl font-poppins font-bold text-foreground mb-2">
+                    Teléfono
+                  </h3>
+                  <a
+                    href="tel:+34670351397"
+                    className="text-lg text-primary hover:underline"
+                  >
                     +34 670 35 13 97
                   </a>
                 </div>
@@ -356,10 +469,13 @@ export default function Home() {
               <div className="flex gap-4">
                 <MapPin className="w-8 h-8 text-primary flex-shrink-0 mt-1" />
                 <div>
-                  <h3 className="text-xl font-poppins font-bold text-foreground mb-2">Dirección</h3>
+                  <h3 className="text-xl font-poppins font-bold text-foreground mb-2">
+                    Dirección
+                  </h3>
                   <p className="text-lg text-foreground/80">
                     Av. Olímpica, 34, B<br />
-                    46900 Torrent, Valencia<br />
+                    46900 Torrent, Valencia
+                    <br />
                     España
                   </p>
                 </div>
@@ -367,9 +483,15 @@ export default function Home() {
 
               <div className="bg-primary/10 p-6 rounded-lg border border-primary/20">
                 <p className="text-foreground font-semibold">
-                  🐱 Horario de Atención:<br />
-                  <span className="text-foreground/70">Lunes a Viernes: 10:00 - 18:00</span><br />
-                  <span className="text-foreground/70">Sábados: 11:00 - 15:00</span>
+                  🐱 Horario de Atención:
+                  <br />
+                  <span className="text-foreground/70">
+                    Lunes a Viernes: 10:00 - 18:00
+                  </span>
+                  <br />
+                  <span className="text-foreground/70">
+                    Sábados: 11:00 - 15:00
+                  </span>
                 </p>
               </div>
             </div>
@@ -378,7 +500,10 @@ export default function Home() {
             <div className="bg-white p-8 rounded-lg shadow-lg">
               <form onSubmit={handleFormSubmit} className="space-y-6">
                 <div>
-                  <label htmlFor="name" className="block text-lg font-semibold text-foreground mb-2">
+                  <label
+                    htmlFor="name"
+                    className="block text-lg font-semibold text-foreground mb-2"
+                  >
                     Nombre
                   </label>
                   <input
@@ -393,7 +518,10 @@ export default function Home() {
                 </div>
 
                 <div>
-                  <label htmlFor="email" className="block text-lg font-semibold text-foreground mb-2">
+                  <label
+                    htmlFor="email"
+                    className="block text-lg font-semibold text-foreground mb-2"
+                  >
                     Email
                   </label>
                   <input
@@ -408,7 +536,10 @@ export default function Home() {
                 </div>
 
                 <div>
-                  <label htmlFor="message" className="block text-lg font-semibold text-foreground mb-2">
+                  <label
+                    htmlFor="message"
+                    className="block text-lg font-semibold text-foreground mb-2"
+                  >
                     Mensaje
                   </label>
                   <textarea
@@ -465,29 +596,46 @@ export default function Home() {
               <h4 className="font-poppins font-bold text-lg mb-4">Enlaces</h4>
               <ul className="space-y-2">
                 <li>
-                  <a href="#mision" className="text-white/70 hover:text-white transition-colors">
+                  <a
+                    href="#mision"
+                    className="text-white/70 hover:text-white transition-colors"
+                  >
                     Misión
                   </a>
                 </li>
                 <li>
-                  <a href="#nosotros" className="text-white/70 hover:text-white transition-colors">
+                  <a
+                    href="#nosotros"
+                    className="text-white/70 hover:text-white transition-colors"
+                  >
                     Sobre Nosotros
                   </a>
                 </li>
                 <li>
-                  <a href="#equipo" className="text-white/70 hover:text-white transition-colors">
+                  <a
+                    href="#equipo"
+                    className="text-white/70 hover:text-white transition-colors"
+                  >
                     Equipo
                   </a>
                 </li>
                 <li>
-                  <a href="#contacto" className="text-white/70 hover:text-white transition-colors">
+                  <a
+                    href="#contacto"
+                    className="text-white/70 hover:text-white transition-colors"
+                  >
                     Contacto
                   </a>
                 </li>
                 <li>
                   <Link
                     href="/peticion"
-                    onClick={() => trackEvent("cta_click", { location: "footer_nav", label: "Firma la petición" })}
+                    onClick={() =>
+                      trackEvent("cta_click", {
+                        location: "footer_nav",
+                        label: "Firma la petición",
+                      })
+                    }
                     className="text-white/70 hover:text-white transition-colors"
                   >
                     Firma la petición
@@ -501,12 +649,18 @@ export default function Home() {
               <h4 className="font-poppins font-bold text-lg mb-4">Contacto</h4>
               <ul className="space-y-2 text-white/70">
                 <li>
-                  <a href="mailto:hola@vozdegato.com" className="hover:text-white transition-colors">
+                  <a
+                    href="mailto:hola@vozdegato.com"
+                    className="hover:text-white transition-colors"
+                  >
                     hola@vozdegato.com
                   </a>
                 </li>
                 <li>
-                  <a href="tel:+34670351397" className="hover:text-white transition-colors">
+                  <a
+                    href="tel:+34670351397"
+                    className="hover:text-white transition-colors"
+                  >
                     +34 670 35 13 97
                   </a>
                 </li>
@@ -518,7 +672,8 @@ export default function Home() {
               <h4 className="font-poppins font-bold text-lg mb-4">Ubicación</h4>
               <p className="text-white/70 text-sm">
                 Av. Olímpica, 34, B<br />
-                46900 Torrent<br />
+                46900 Torrent
+                <br />
                 Valencia, España
               </p>
             </div>
@@ -540,7 +695,7 @@ export default function Home() {
         </div>
       </footer>
 
-      <PeticionBanner />
+      <DonationBanner />
     </div>
   );
 }
