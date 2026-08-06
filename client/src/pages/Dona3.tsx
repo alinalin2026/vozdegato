@@ -1,5 +1,6 @@
 import DonationButtons from "@/components/DonationButtons";
 import StickyDonateBar from "@/components/StickyDonateBar";
+import ThankYouPacks from "@/components/ThankYouPacks";
 import { Progress } from "@/components/ui/progress";
 import { trackEvent } from "@/lib/analytics";
 import { CheckCircle2 } from "lucide-react";
@@ -107,19 +108,20 @@ export default function Dona3() {
             <div className="bg-white rounded-2xl border border-border p-6 sm:p-8">
               <div className="flex items-baseline justify-between mb-2">
                 <span className="text-2xl sm:text-3xl font-poppins font-bold text-primary">
-                  {RAISED_EUR.toLocaleString("es-ES")} €
+                  {REMAINING_EUR.toLocaleString("es-ES")} €
                 </span>
                 <span className="text-foreground/60">
-                  recaudados de {GOAL_EUR.toLocaleString("es-ES")} €
+                  nos faltan de {GOAL_EUR.toLocaleString("es-ES")} €
                 </span>
               </div>
               <Progress value={PROGRESS_PCT} className="mb-3" />
               <p className="text-foreground/70">
-                Faltan{" "}
+                Ya llevamos{" "}
                 <strong className="text-foreground">
-                  {REMAINING_EUR.toLocaleString("es-ES")} €
+                  {RAISED_EUR.toLocaleString("es-ES")} €
                 </strong>{" "}
-                para completar la próxima entrega a las colonias de Guadalajara.
+                recaudados para la próxima entrega a las colonias de
+                Guadalajara.
               </p>
             </div>
           </div>
@@ -292,18 +294,28 @@ export default function Dona3() {
                 </div>
               </div>
             </div>
+          </div>
+        </section>
 
-            <div className="text-center">
-              <p className="text-foreground/70">
-                ¿Dudas? Escríbenos a{" "}
-                <a
-                  href="mailto:hola@vozdegato.com"
-                  className="text-primary hover:underline font-semibold"
-                >
-                  hola@vozdegato.com
-                </a>
-              </p>
-            </div>
+        {/* Reward packs — reuses the 5/10/20 checkout tiers, see component
+            comment for why there's no separate merch backend */}
+        <section className="pb-12 md:pb-16">
+          <div className="container max-w-xl mx-auto">
+            <ThankYouPacks />
+          </div>
+        </section>
+
+        <section className="pb-12 md:pb-16">
+          <div className="container max-w-xl mx-auto text-center">
+            <p className="text-foreground/70">
+              ¿Dudas? Escríbenos a{" "}
+              <a
+                href="mailto:hola@vozdegato.com"
+                className="text-primary hover:underline font-semibold"
+              >
+                hola@vozdegato.com
+              </a>
+            </p>
           </div>
         </section>
       </main>
@@ -318,14 +330,6 @@ export default function Dona3() {
               +34 670 35 13 97
             </a>{" "}
             · Av. Olímpica, 34, B, 46900 Torrent, Valencia, España
-          </p>
-
-          {/* Transparency block — placeholders below are NOT real, fill in
-              with the association's actual registration details before this
-              page takes real traffic */}
-          <p className="mt-3 text-xs leading-relaxed max-w-md mx-auto">
-            [Nombre legal completo de la asociación] · CIF [pendiente] · Nº de
-            registro de asociaciones [pendiente]
           </p>
 
           <p className="mt-2">
